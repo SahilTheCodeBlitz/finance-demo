@@ -1,0 +1,382 @@
+openapi: 3.0.0
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/SAHILKHANE410/FinanceApp/1.0.0
+info:
+  version: "1.0.0"
+  title: Finance App
+  description: The API for running the the Finance Application
+paths:
+  /v1/auth/google:
+    post:
+      tags:
+        - authentication
+      summary: Verify Google Auth Token
+      description: his endpoint accepts a Google authentication token, validates it with Google’s authentication servers, and checks if the user is already registered. If the user is registered, a successful response is returned if not, the user need to register via a separate URL.
+      operationId: verifyGoogleAuthToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                idTokenString:
+                  type: string
+                  description: The Google ID token to be verified.
+              required:
+                - idTokenString
+            example:
+              idTokenString: >
+                eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg5Y2UzNTk4YzQ3M2FmMWJkYTRiZmY5NWU2Yzg3MzY0NTAyMDZmYmEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI2OTUyNDE4MjUwNy1tc3VydnM4a3NjcmlucGppNGt2Mms0dTFwN2Y4N2RsNy5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImF1ZCI6IjY5NTI0MTgyNTA3LW1zdXJ2czhrc2NyaW5pamk0a3YyazR1MXA3Zjg3ZGw3LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTAxNDg4Nzk2Mzk1OTM1NjAyMDg1IiwiaGQiOiJrYW5yaXMuYml6IiwiZW1haWwiOiJzYWhpbEBrYW5yaXMuYml6IiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiJDR2tvWHRzOUE0eUV2SXRrbFVCczdnIiwibm9uY2UiOiIzRWtWX3RVUHF0cHdWU1lZbzRnUFByWDV3eVFCQ1B2bWVBa00xTTBGV004IiwibmFtZSI6IlNhaGlsIEtoYW5lIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0tUTDFwWEF3TUZtUUxHMzVQZDRFS05RT25IaTBEblE0bWpzdy1vWjNLeHBrU1dUdz1zOTYtYyIsImdpdmVuX25hbWUiOiJTYWhpbCIsImZhbWlseV9uYW1lIjoiS2hhbmUiLCJpYXQiOjE3MzYyMjk2NjcsImV4cCI6MTczNjIzMzI2N30.Puwavru7XUDuxmQeX1Xr1yH5VWElPB0-vlHrDBaxGNRnDN_Qz2cvH4TlufEUSxK_wmRrPTU7jU-Xu_q1xaSpafcrqI_zg6-Wm2H6NVuL3vSk1VOBL--fQXX_uJgRYWz_ZVvI54FXKI05oMaT9rxYwHUR3L3xEbPeBvblpv2AA2ut-Fo-rSFh2UKhJqkiv_w5FEbhFQGFZ8_1fbpqm9vVCGe46GNpUjxxElEauCihJ4wMxzWPnOPY58Kkv3eWIRqXIzZp9ye9Bi86Y9hTzUvhdDrXLo4Si7dbPe3hOLn7YMO46ECcTSUGD1iub_XA3r6lrInkEkdGsi6AtcamkzSOCg
+      responses:
+        '200':
+          description: Token verified successfully and user is already registered with this email and as a response a jwt token and user data fetched from database is returned to client .
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  firstName:
+                    type: string
+                  lastName:
+                    type: string
+                  email:
+                    type: string
+                  phone:
+                    type: string
+                example:
+                  firstName: "Sahil"
+                  lastName: "Khane"
+                  email: "sahil@kanris.biz"
+                  phone: "123-456-7890"
+        '401':
+          description: Unauthorized. Token is invalid or expired.Wrong google token or unauthorized google token passed in request body .
+        '404':
+          description: User not Registered . User is not registered with the mail id with which he had sign in the google. He needs to register and then sign in with google.
+        '403':
+          description: Forbidden , Error we will resolve sir ,  When user does not pass empty body then this fault code arises
+
+  /v1/auth/register:
+    post:
+      tags:
+        - authentication
+      summary: Registration Api
+      description: This API endpoint accepts a payload of user data and checks if the user exists in the database. If the user does not exist, a new user is created. If the user already exists, the user’s data is fetched, and a JWT token is generated for further use.
+      operationId: verifyAndProcessGoogleAuthToken
+      requestBody:
+        description: User data to send (First Name, Last Name, Email, Phone).
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+                email:
+                  type: string
+                phone:
+                  type: string
+              example:
+                firstName: "Sahil"
+                lastName: "Khane"
+                email: "sahil@kanris.biz"
+                phone: "123-456-7890"
+      responses:
+        '201':
+          description: New User Registered . A new user is registered whose entry is not in the database . So new entry is made in db and a user details and jwt token is send in response.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  firstName:
+                    type: string
+                  lastName:
+                    type: string
+                  email:
+                    type: string
+                  phoneNumber:
+                    type: string
+              example:
+                userId: "12345"
+                firstName: "Sahil"
+                lastName: "Khane"
+                email: "sahil@kanris.biz"
+                phoneNumber: "123-456-7890"
+          headers:
+            Authorization:
+              description: JWT token for authenticated user
+              schema:
+                type: string
+                example: "	
+Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYWhpbGtoYW5lNDEsI..."
+
+        '200':
+          description: User is already registered and present in the database  . So only user data is fetched and send to  the client along with jwt token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userId:
+                    type: string
+                  firstName:
+                    type: string
+                  lastName:
+                    type: string
+                  email:
+                    type: string
+                  phoneNumber:
+                    type: string
+              example:
+                userId: "12345"
+                firstName: "Sahil"
+                lastName: "Khane"
+                email: "sahil@kanris.biz"
+                phoneNumber: "123-456-7890"
+          headers:
+            Authorization:
+              description: JWT token for authenticated user
+              schema:
+                type: string
+                example: "eyJhbGciOiJIUzI1NiJ9.e....."
+
+        '400':
+          description: Bad Request . Some field in the request body are missing that is sent from client to the server.
+        '403':
+          description: Forbidden . Error we will solve when user doed not pass any thing in body this status code is send as a response.
+        '409':
+          description: Conflict. User with this email or phone already registered . Refer to the body data that will be receive it will tell exactly whether phone number is already present in db or email.
+
+
+components:
+  schemas:
+    LightingSummary:
+      type: object
+      properties:
+        zones:
+          type: array
+          items:
+            $ref: '#/components/schemas/LightingZone'
+        zoneStatus:
+          type: array
+          items:
+            $ref: '#/components/schemas/LightingZoneStatus'
+      description: ok
+    LightingZone:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        deviceId:
+          type: integer
+          format: int32
+        deviceType:
+          type: string
+          enum:
+            - dimmer
+            - switch
+        zone:
+          type: string
+    LightingZoneStatus:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        lastUpdate:
+          type: string
+          format: date-time
+        level:
+          type: integer
+          format: int32
+      description: the status of the lighting zone.
+    TemperatureSummary:
+      type: object
+      properties:
+        zones:
+          type: array
+          items:
+            $ref: '#/components/schemas/TemperatureZone'
+        zoneStatus:
+          type: array
+          items:
+            $ref: '#/components/schemas/TemperatueZoneStatus'
+      description: ok
+    TemperatureZone:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: the unique identifier for the zone
+        name:
+          type: string
+        inputPosition:
+          type: integer
+          format: int32
+        outputPosition:
+          type: integer
+          format: int32
+        zone:
+          type: string
+      description: a single temperature zone
+    TemperatueZoneStatus:
+      type: object
+      required:
+        - id
+        - timestamp
+        - value
+      properties:
+        id:
+          type: string
+          description: the unique identifier for the zone
+        name:
+          type: string
+          description: the name of the zone
+        value:
+          type: number
+          format: double
+          description: the temperature in the zone
+        units:
+          type: string
+          description: the temperature units
+          enum:
+            - celsius
+            - fahrenheit
+          default: fahrenheit
+        timestamp:
+          type: string
+          format: date-time
+          description: the timestamp when the temperature was measured
+      description: status of a single zone
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        message:
+          type: string
+          example: everything is ok
+    HeaterState:
+      type: object
+      properties:
+        id:
+          type: string
+        state:
+          type: string
+    DeviceState:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        lastUpdate:
+          type: string
+          format: date-time
+        level:
+          type: integer
+          format: int32
+    ForecastResponse:
+      type: object
+      properties:
+        city:
+          $ref: '#/components/schemas/City'
+        values:
+          type: array
+          items:
+            $ref: '#/components/schemas/Forecast'
+    Forecast:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date-time
+        pressure:
+          type: number
+          format: double
+        humidity:
+          type: integer
+          format: int32
+        windSpeed:
+          type: number
+          format: double
+        clouds:
+          type: integer
+          format: int32
+        temperature:
+          $ref: '#/components/schemas/ForecastTemperature'
+        weather:
+          $ref: '#/components/schemas/WeatherForecast'
+    City:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        lat:
+          type: number
+          format: double
+        lon:
+          type: number
+          format: double
+        country:
+          type: string
+    ForecastTemperature:
+      type: object
+      properties:
+        low:
+          type: number
+          format: double
+        high:
+          type: number
+          format: double
+        morning:
+          type: number
+          format: double
+        day:
+          type: number
+          format: double
+        evening:
+          type: number
+          format: double
+        night:
+          type: number
+          format: double
+    WeatherForecast:
+      type: object
+      properties:
+        summary:
+          type: string
+        description:
+          type: string
+        icon:
+          type: string
+    DeviceRegistrationInfo:
+      type: object
+      properties:
+        uri:
+          type: string
+          format: uri
+          example: 'http://10.0.0.220:8080'
+        id:
+          type: string
+          format: uuid
+          example: 0729a580-2240-11e6-9eb5-0002a5d5c51b
