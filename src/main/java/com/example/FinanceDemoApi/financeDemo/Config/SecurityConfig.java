@@ -25,12 +25,26 @@ public class SecurityConfig {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
 
-    // list of allowed endpoints without authorization
+    // whitelist of endpoints without authorization
     private static final List<String> WHITELIST = Arrays.asList(
             "/v1/auth/google",
             "/v1/test/test3",
             "/v1/test/test4",
             "/v1/auth/register"
+
+    );
+
+    // WhiteList of the endpoints that are accessible to free users
+    private static final List<String> FREE_USER_ENDPOINTS = Arrays.asList(
+            "/v1/free/resource1",
+            "/v1/free/resource2"
+    );
+
+    // WhiteList of the endpoints that are accessible to premium users
+    private static final List<String> PREMIUM_USER_ENDPOINTS = Arrays.asList(
+            "/v1/premium/resource1",
+            "/v1/premium/resource2",
+            "/v1/premium/resource3"
     );
 
     @Bean
@@ -40,9 +54,11 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable()) // Disable CSRF for APIs
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(WHITELIST.toArray(new String[0])).permitAll()  // endpoints available without authorization
+                        .requestMatchers(FREE_USER_ENDPOINTS.toArray(new String[0])).hasAuthority("ROLE_free")
+                        .requestMatchers(PREMIUM_USER_ENDPOINTS.toArray(new String[0])).hasAuthority("ROLE_premium")
                         .anyRequest().authenticated()  // All other endpoints require authentication
                 )
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class); // Add JWT filter before UsernamePasswordAuthenticationFilter
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

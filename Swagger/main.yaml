@@ -11,9 +11,9 @@ paths:
   /v1/auth/google:
     post:
       tags:
-        - authentication
+        - Authentication
       summary: Verify Google Auth Token
-      description: his endpoint accepts a Google authentication token, validates it with Google’s authentication servers, and checks if the user is already registered. If the user is registered, a successful response is returned if not, the user need to register via a separate URL.
+      description: This endpoint accepts a Google authentication token, validates it with Google’s authentication servers, and checks if the user is already registered. If the user is registered, a successful response is returned if not, the user need to register via a separate URL.
       operationId: verifyGoogleAuthToken
       requestBody:
         required: true
@@ -54,14 +54,32 @@ paths:
         '401':
           description: Unauthorized. Token is invalid or expired.Wrong google token or unauthorized google token passed in request body .
         '404':
-          description: User not Registered . User is not registered with the mail id with which he had sign in the google. He needs to register and then sign in with google.
-        '403':
-          description: Forbidden , Error we will resolve sir ,  When user does not pass empty body then this fault code arises
+          description: Not Found.  User has not registered .
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  firstName:
+                    type: string
+                  lastName:
+                    type: string
+                  email:
+                    type: string
+                  phone:
+                    type: string
+                example:
+                  "firstName": "sahil",
+                  "lastName": "khane",
+                  "phone": null,
+                  "email": "sahilkhane410@gmail.com"
+        '400':
+          description: Bad Request . Some field in the request body are missing or request body  that is sent from client to the server is empty .
 
   /v1/auth/register:
     post:
       tags:
-        - authentication
+        - Authentication
       summary: Registration Api
       description: This API endpoint accepts a payload of user data and checks if the user exists in the database. If the user does not exist, a new user is created. If the user already exists, the user’s data is fetched, and a JWT token is generated for further use.
       operationId: verifyAndProcessGoogleAuthToken
@@ -150,8 +168,6 @@ Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYWhpbGtoYW5lNDEsI..."
 
         '400':
           description: Bad Request . Some field in the request body are missing that is sent from client to the server.
-        '403':
-          description: Forbidden . Error we will solve when user doed not pass any thing in body this status code is send as a response.
         '409':
           description: Conflict. User with this email or phone already registered . Refer to the body data that will be receive it will tell exactly whether phone number is already present in db or email.
 
@@ -211,7 +227,7 @@ components:
         zoneStatus:
           type: array
           items:
-            $ref: '#/components/schemas/TemperatueZoneStatus'
+            $ref: '#/components/schemas/TemperatureZoneStatus'
       description: ok
     TemperatureZone:
       type: object

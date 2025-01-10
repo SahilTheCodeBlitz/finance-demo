@@ -1,5 +1,5 @@
 package com.example.FinanceDemoApi.financeDemo.Model;
-
+import com.example.FinanceDemoApi.financeDemo.Enums.Roles;
 import jakarta.persistence.*;
 
 @Entity
@@ -20,6 +20,16 @@ public class UserSchema {
     private Long createdDate;
 
 
+    @Column(name = "role", nullable = false)
+    private String role = "free"; // Default role is "FREE"
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
 
     // Getters and Setters
     public Long getPrimaryKey() {

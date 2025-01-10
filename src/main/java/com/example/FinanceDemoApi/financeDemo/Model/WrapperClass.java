@@ -1,5 +1,6 @@
 package com.example.FinanceDemoApi.financeDemo.Model;
 
+import com.example.FinanceDemoApi.financeDemo.Enums.Roles;
 import com.google.gson.Gson;
 
 public class WrapperClass {
@@ -14,7 +15,9 @@ public class WrapperClass {
 
     private Long userId;
 
-    public String getFirstName(String firstName) {
+    private String role;
+
+    public String getFirstName() {
         return this.firstName;
     }
 
@@ -22,7 +25,7 @@ public class WrapperClass {
         this.firstName = firstName;
     }
 
-    public String getLastName(String lastName) {
+    public String getLastName() {
         return this.lastName;
     }
 
@@ -30,7 +33,7 @@ public class WrapperClass {
         this.lastName = lastName;
     }
 
-    public String getPhoneNumber(String contactInfo) {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
@@ -38,31 +41,30 @@ public class WrapperClass {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getEmail(String contactInfo) {
+    public String getEmail() {
         return email;
     }
 
-//    @Override
-//    public String toString() {
-//        return "{" +
-//                "firstName='" + firstName + '\'' +
-//                ", lastName='" + lastName + '\'' +
-//                ", phoneNumber='" + phoneNumber + '\'' +
-//                ", email='" + email + '\'' +
-//                ", userId=" + userId +
-//                '}';
-//    }
+
 
     public void setEmail(String email) {
         this.email = email;
     }
 
-    public Long getUserId(Long primaryKey) {
+    public Long getUserId() {
         return userId;
     }
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     @Override

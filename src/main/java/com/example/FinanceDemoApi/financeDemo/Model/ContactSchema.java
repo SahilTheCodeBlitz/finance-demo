@@ -7,8 +7,6 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "contact")
 public class ContactSchema {
-
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long uniqueId;
