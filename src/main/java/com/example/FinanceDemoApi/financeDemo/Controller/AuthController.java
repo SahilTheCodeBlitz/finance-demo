@@ -1,6 +1,5 @@
 package com.example.FinanceDemoApi.financeDemo.Controller;
-import com.example.FinanceDemoApi.financeDemo.Model.TokenRequest;
-import com.example.FinanceDemoApi.financeDemo.Model.UserDto;
+import com.example.FinanceDemoApi.financeDemo.Model.*;
 import com.example.FinanceDemoApi.financeDemo.Service.AuthService;
 import com.example.FinanceDemoApi.financeDemo.Utility.ApiResponse;
 
@@ -38,11 +37,12 @@ public class AuthController {
         return authService.registration(userDto);
     }
 
-//    @PostMapping(value = "/refresh-token")
-//    public ResponseEntity<?> refresh(@RequestBody TokenRequest tokenRequest){
-//        String refreshToken = tokenRequest.getIdTokenString();
-//        return authService.refreshToken(refreshToken);
-//    }
+    @PostMapping(value = "/refresh")
+    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenDto refreshTokenDto) {
+        return authService.refreshToken(refreshTokenDto);
+    }
+
+
 
     @ExceptionHandler(HttpMessageNotReadableException.class) public ResponseEntity<ApiResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) { ApiResponse apiResponse = new ApiResponse("Bad Request: Request body is missing or malformed.");
         return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);

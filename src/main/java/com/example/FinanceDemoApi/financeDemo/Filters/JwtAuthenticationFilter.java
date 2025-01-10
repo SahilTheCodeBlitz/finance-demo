@@ -1,6 +1,5 @@
     package com.example.FinanceDemoApi.financeDemo.Filters;
 
-
     import io.jsonwebtoken.Claims;
     import io.jsonwebtoken.JwtException;
     import io.jsonwebtoken.Jwts;
@@ -16,7 +15,7 @@
     import org.springframework.stereotype.Component;
     import org.springframework.web.filter.OncePerRequestFilter;
     import java.io.IOException;
-    import java.nio.file.attribute.UserPrincipal;
+
     import java.util.List;
 
     @Component
@@ -78,19 +77,23 @@
     //                    // Set the authentication in the security context
     //                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     //                }
-                } catch (JwtException e) {
-                    if (e instanceof io.jsonwebtoken.ExpiredJwtException) {
-                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "JWT token has expired");
-                    }else {
-                        response.sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
-
-                    }
+                } catch (io.jsonwebtoken.ExpiredJwtException e) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("JWT token has expired");
                     return;
+                } catch (JwtException e) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                    response.getWriter().write("Invalid JWT token");
+                    return;
+
                 }
             }
 
             filterChain.doFilter(request, response);
         }
+
+
+
 
 
 

@@ -9,7 +9,7 @@ import com.example.FinanceDemoApi.financeDemo.Utility.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.Authentication;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,14 +47,9 @@ public class RoleService {
             // Extract claims from the token
             Claims claims = jwtTokenUtil.extractAllClaims(token);
 
-            System.out.println(claims);
-
             Double uniqueId = claims.get("uniqueId", Double.class);
 
             Long id = uniqueId.longValue();
-
-            System.out.println(uniqueId);
-
 
             // Find user in the database
             Optional<UserSchema> userOptional = userRepository.findById(id);

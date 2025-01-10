@@ -3,10 +3,7 @@ package com.example.FinanceDemoApi.financeDemo.Service;
 import com.example.FinanceDemoApi.financeDemo.Exception.InvalidTokenException;
 import com.example.FinanceDemoApi.financeDemo.Exception.UserAlreadyExist;
 
-import com.example.FinanceDemoApi.financeDemo.Model.ContactSchema;
-import com.example.FinanceDemoApi.financeDemo.Model.UserDto;
-import com.example.FinanceDemoApi.financeDemo.Model.UserSchema;
-import com.example.FinanceDemoApi.financeDemo.Model.WrapperClass;
+import com.example.FinanceDemoApi.financeDemo.Model.*;
 import com.example.FinanceDemoApi.financeDemo.Repository.ContactRepository;
 import com.example.FinanceDemoApi.financeDemo.Repository.UserRepository;
 import com.example.FinanceDemoApi.financeDemo.Utility.ApiResponse;
@@ -22,6 +19,9 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.MalformedJwtException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -33,6 +33,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
+
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
@@ -107,30 +109,14 @@ public class AuthService {
 
                     String jwt = jwtTokenUtil.generateToken(wrapperClass);
 
-                   // String refreshToken = jwtTokenUtil.generateRefreshToken(email);
 
-                    System.out.println(jwt);
-
-
-
-                    System.out.println(wrapperClass);
+//
 
                     return ResponseEntity.ok()
                             .header("Authorization", "Bearer " + jwt)
                             .body(wrapperClass.toString()); // user already registered with email
 
-//                    ResponseCookie refreshTokenCookie = ResponseCookie.from("refreshToken", refreshToken)
-//                            .httpOnly(true)
-//                            .secure(true) // Ensure cookies are sent over HTTPS
-//                            .path("/")     // Make the cookie accessible to all endpoints
-//                            .maxAge(60 * 60 * 24 * 180) // 180 days
-//                            .build();
 
-//                    // Add the cookie to the response header
-//                    return ResponseEntity.ok()
-//                            .header("Set-Cookie", refreshTokenCookie.toString()) // Add refresh token as cookie
-//                            .header("Authorization", "Bearer " + jwt) // Add access token in Authorization header
-//                            .body("Login successful"); //
 
                 }
                 else if (contactSchemaPhone.isPresent()){
@@ -272,9 +258,22 @@ public class AuthService {
 
                 String jwt = jwtTokenUtil.generateToken(wrapperClass);
 
-                return ResponseEntity.status(HttpStatus.OK)
+                String refreshToken = jwtTokenUtil.generateRefreshToken(wrapperClass);
+
+
+                Map<String, String> tokens = new HashMap<>();
+                tokens.put("accessToken", jwt);
+                tokens.put("refreshToken", refreshToken);
+
+                System.out.println(refreshToken);
+
+                return ResponseEntity.ok()
                         .header("Authorization", "Bearer " + jwt)
-                        .body(wrapperClass.toString());
+                        .body(tokens);
+
+//                return ResponseEntity.status(HttpStatus.OK)
+//                        .header("Authorization", "Bearer " + jwt)
+//                        .body(wrapperClass.toString());
             }
 
         } catch (UserAlreadyExist e) {
@@ -294,29 +293,72 @@ public class AuthService {
         contactRepository.save(contact);
     }
 
-    // method for generating new access token
-    // parameters we receive is refresh token
-//    public ResponseEntity<?> refreshToken(String refreshToken) {
-//
-//        if (refreshToken == null || refreshToken.isEmpty()) {
-//            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-//                    .body(Map.of("message", "Refresh token is required"));
-//        }
-//
-//        try {
-//            Claims claims = jwtTokenUtil.validateToken(refreshToken, true);
-//            String username = claims.getSubject(); // handle here
-//
-//            // Generate new access token
-////            String newAccessToken = jwtTokenUtil.generateToken();
-//
-//            return ResponseEntity.ok(Map.of(
-//                    "accessToken", newAccessToken
-//            ));
-//        } catch (JwtException e) {
-//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-//                    .body(Map.of("message", "Invalid or Expired Refresh Token"));
-//        }
-//    }
-//
+    // method for refreshing the access  token when it is expired
+    public ResponseEntity<?>refreshToken(RefreshTokenDto refreshTokenDto){
+
+        // token validation do whether user has sent token in body or not
+
+        String token = refreshTokenDto.getToken();
+
+        System.out.println(token);
+
+        try {
+            if (jwtTokenUtil.isTokenExpired(token)) {
+                // If the refresh token has expired, send a 401 Unauthorized response
+                ApiResponse apiResponse = new ApiResponse("Refresh token has expired. Please login again.");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
+            }
+
+            // Validate and extract claims from the refresh token
+            Claims refreshClaims = jwtTokenUtil.extractRefreshClaims(token);
+            String email = refreshClaims.getSubject();
+            System.out.println(email);
+            String role = refreshClaims.get("role", String.class);
+            System.out.println(role);
+            String firstName = refreshClaims.get("firstName",String.class);
+            System.out.println(firstName);
+            String lastName = refreshClaims.get("lastName",String.class);
+            System.out.println(lastName);
+            String phoneNumber = refreshClaims.get("phoneNumber",String.class);
+            System.out.println(phoneNumber);
+            Double id = refreshClaims.get("uniqueId",Double.class);
+
+            Long uniqueId = id.longValue();
+
+            System.out.println(id);
+
+            // Generate a new access token
+            WrapperClass wrapper = new WrapperClass();
+            wrapper.setUserId(uniqueId);
+            wrapper.setFirstName(firstName);
+            wrapper.setLastName(lastName);
+            wrapper.setEmail(email);
+            wrapper.setRole(role);
+            wrapper.setPhoneNumber(phoneNumber);
+
+            String newAccessToken = jwtTokenUtil.generateToken(wrapper);
+
+            ApiResponse apiResponse = new ApiResponse("Access token refreshed successfully");
+            return ResponseEntity.ok()
+                    .header("Authorization", "Bearer " + newAccessToken)
+                    .body(apiResponse);
+        } catch (ExpiredJwtException ex) {
+            // Handle token expiration specifically
+            ApiResponse apiResponse = new ApiResponse("Refresh token has expired. Please login again.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
+
+        } catch (MalformedJwtException ex) {
+            // Handle invalid token structure
+            ApiResponse apiResponse = new ApiResponse("Invalid token format.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
+
+        } catch (Exception ex) {
+            // General exception handling
+            ApiResponse apiResponse = new ApiResponse("Invalid or expired refresh token.");
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body(apiResponse);
+        }
+
+    }
+
+
 }

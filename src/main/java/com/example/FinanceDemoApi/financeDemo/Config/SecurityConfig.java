@@ -1,6 +1,7 @@
 package com.example.FinanceDemoApi.financeDemo.Config;
 
 import com.example.FinanceDemoApi.financeDemo.Filters.JwtAuthenticationFilter;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,9 +29,10 @@ public class SecurityConfig {
     // whitelist of endpoints without authorization
     private static final List<String> WHITELIST = Arrays.asList(
             "/v1/auth/google",
+            "/v1/auth/register",
+            "/v1/auth/refresh",
             "/v1/test/test3",
-            "/v1/test/test4",
-            "/v1/auth/register"
+            "/v1/test/test4"
 
     );
 
@@ -51,7 +53,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http
-                .csrf(csrf -> csrf.disable()) // Disable CSRF for APIs
+                .csrf(csrf -> csrf.disable())
+                .exceptionHandling(exception -> exception
+                        .authenticationEntryPoint((request, response, authException) -> {
+                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                            response.getWriter().write("Authentication is required or token is invalid");
+                        })
+                )
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(WHITELIST.toArray(new String[0])).permitAll()  // endpoints available without authorization
                         .requestMatchers(FREE_USER_ENDPOINTS.toArray(new String[0])).hasAuthority("ROLE_free")
