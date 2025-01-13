@@ -14,6 +14,7 @@ import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/v1/role")
 public class RoleController {
 
     @Autowired
@@ -28,7 +29,7 @@ public class RoleController {
 
 
 
-    @GetMapping("/updateRole")
+    @PutMapping("/updateRole")
     public ResponseEntity<?> updateRole(@RequestHeader("Authorization") String tokenHeader, @RequestBody RoleRequestDto roleRequestDto) {
 
         String role = roleRequestDto.getRole();

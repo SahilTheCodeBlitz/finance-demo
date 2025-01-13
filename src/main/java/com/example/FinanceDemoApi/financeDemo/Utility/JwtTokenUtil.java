@@ -2,10 +2,7 @@ package com.example.FinanceDemoApi.financeDemo.Utility;
 
 
 import com.example.FinanceDemoApi.financeDemo.Model.WrapperClass;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.*;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -24,10 +21,7 @@ public class JwtTokenUtil {
     @Value("${jwt.secretKeyAccess}")
     private String refreshSecretKey;
 
-//    @Value("${jwt.refreshTokenExpiration}")
-//    private long refreshTokenExpiration;
 
-    // method for generating the jwt token
     public String generateToken(WrapperClass wrapper) {
         String email = wrapper.getEmail();
         String firstName = wrapper.getFirstName();
@@ -45,7 +39,7 @@ public class JwtTokenUtil {
                 .claim("uniqueId",uniqueId)
                 .claim("role",role)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 40))// 40 seconds
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60))// 40 seconds
                 .setIssuer("FinanceDemoApp")
                 .setId(UUID.randomUUID().toString())
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
@@ -84,7 +78,7 @@ public class JwtTokenUtil {
                 .claim("uniqueId", uniqueId)
                 .claim("role", role)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60)) // Longer expiration time
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60*2)) // Longer expiration time
                 .setIssuer("FinanceDemoApp")
                 .setId(UUID.randomUUID().toString())
                 .signWith(SignatureAlgorithm.HS256, refreshSecretKey) // Use a different secret key for refresh tokens
@@ -116,14 +110,12 @@ public class JwtTokenUtil {
     }
 
 
-
-
-
-
-
-
-
-
-
+    public Claims parseAndValidateToken(String token) throws ExpiredJwtException, MalformedJwtException, SignatureException {
+        return Jwts.parser()
+                .setSigningKey(refreshSecretKey)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
 
 }

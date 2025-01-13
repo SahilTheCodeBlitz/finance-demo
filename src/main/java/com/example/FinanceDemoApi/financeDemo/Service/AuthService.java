@@ -22,6 +22,7 @@ import com.google.api.client.json.gson.GsonFactory;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.security.SignatureException;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -93,7 +94,7 @@ public class AuthService {
 
                 // if user already registered with email
                 if (contactSchemaEmail.isPresent()){
-                    System.out.println("User with this email already exist");
+                    logger.info("User with this email already exist");
 
                     Optional<UserSchema> userSchema  = Optional.ofNullable(contactSchemaEmail.get().getUserId());
 
@@ -107,14 +108,21 @@ public class AuthService {
                     wrapperClass.setPhoneNumber(contactSchemaEmail.get().getContactInfo());
                     wrapperClass.setRole(userSchema.get().getRole());
 
-                    String jwt = jwtTokenUtil.generateToken(wrapperClass);
+                    String jwtAccess = jwtTokenUtil.generateToken(wrapperClass);
+
+                    String jwtRefresh = jwtTokenUtil.generateRefreshToken(wrapperClass);
 
 
 //
 
+//                    return ResponseEntity.ok()
+//                            .header("Authorization", "Bearer " + jwtAccess)
+//                            .body(wrapperClass.toString()); // user already registered with email
+
                     return ResponseEntity.ok()
-                            .header("Authorization", "Bearer " + jwt)
-                            .body(wrapperClass.toString()); // user already registered with email
+                            .header("Authorization", "Bearer " + jwtAccess)
+                            .header("Refresh-Token", jwtRefresh) // Custom header for refresh token
+                            .body(wrapperClass.toString());
 
 
 
@@ -133,13 +141,14 @@ public class AuthService {
                     wrapperClass.setPhoneNumber(contactSchemaEmail.get().getContactInfo());
                     wrapperClass.setRole(userSchema.get().getRole());
 
-                    String jwt = jwtTokenUtil.generateToken(wrapperClass);
+                    String jwtAccess = jwtTokenUtil.generateToken(wrapperClass);
 
-                    System.out.println("jwt token = "+jwt);
+                   String jwtRefresh = jwtTokenUtil.generateRefreshToken(wrapperClass);
 
                     return ResponseEntity.ok()
-                            .header("Authorization", "Bearer " + jwt)
-                            .body(wrapperClass.toString()); // user already registered with email
+                            .header("Authorization", "Bearer " + jwtAccess)
+                            .header("Refresh-Token", jwtRefresh)
+                            .body(wrapperClass.toString());
                 }
                 else {
                     // user has not registered we will fetch the payload  and send payload
@@ -171,7 +180,7 @@ public class AuthService {
             return new ResponseEntity<>(apiResponse, HttpStatus.UNAUTHORIZED);
         }
         catch (Exception e) {
-            //LOG.error("Token validation failed: {}", idTokenString, e);
+
             ApiResponse apiResponse = new ApiResponse("Internal server error. Token verification failed.");
             return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -198,7 +207,6 @@ public class AuthService {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                         .body(apiResponse);
             }
-
 
 
             String email = userDto.getEmail();
@@ -230,10 +238,15 @@ public class AuthService {
                 wrapperClass.setPhoneNumber(phone);
                 wrapperClass.setRole(userSchema.getRole());
 
-                String jwt = jwtTokenUtil.generateToken(wrapperClass);
+                String jwtAccess = jwtTokenUtil.generateToken(wrapperClass);
+
+                String jwtRefresh = jwtTokenUtil.generateRefreshToken(wrapperClass);
+
+
 
                 return ResponseEntity.status(HttpStatus.CREATED)
-                        .header("Authorization", "Bearer " + jwt)
+                        .header("Authorization", "Bearer " + jwtAccess)
+                        .header("Refresh-Token", jwtRefresh)
                         .body(wrapperClass.toString());
 
             } else if (contactOptionalEmail.isPresent() && contactOptionalPhone.isEmpty()) {
@@ -256,24 +269,17 @@ public class AuthService {
                 wrapperClass.setPhoneNumber(contactSchemaPhone.get().getContactInfo());
                 wrapperClass.setRole(existingUserSchema.get().getRole());
 
-                String jwt = jwtTokenUtil.generateToken(wrapperClass);
+                String jwtAccess = jwtTokenUtil.generateToken(wrapperClass);
 
-                String refreshToken = jwtTokenUtil.generateRefreshToken(wrapperClass);
+                String jwtRefresh = jwtTokenUtil.generateRefreshToken(wrapperClass);
 
 
-                Map<String, String> tokens = new HashMap<>();
-                tokens.put("accessToken", jwt);
-                tokens.put("refreshToken", refreshToken);
 
-                System.out.println(refreshToken);
+                return ResponseEntity.status(HttpStatus.OK)
+                        .header("Authorization", "Bearer " + jwtAccess)
+                        .header("Refresh-Token", jwtRefresh)
+                        .body(wrapperClass.toString());
 
-                return ResponseEntity.ok()
-                        .header("Authorization", "Bearer " + jwt)
-                        .body(tokens);
-
-//                return ResponseEntity.status(HttpStatus.OK)
-//                        .header("Authorization", "Bearer " + jwt)
-//                        .body(wrapperClass.toString());
             }
 
         } catch (UserAlreadyExist e) {
@@ -294,38 +300,26 @@ public class AuthService {
     }
 
     // method for refreshing the access  token when it is expired
-    public ResponseEntity<?>refreshToken(RefreshTokenDto refreshTokenDto){
-
-        // token validation do whether user has sent token in body or not
+    public ResponseEntity<?> refreshToken(RefreshTokenDto refreshTokenDto) {
+        // Validate that the token is provided in the request body
+        if (refreshTokenDto == null || refreshTokenDto.getToken() == null || refreshTokenDto.getToken().isEmpty()) {
+            ApiResponse apiResponse = new ApiResponse("Refresh token is missing or invalid.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
+        }
 
         String token = refreshTokenDto.getToken();
 
-        System.out.println(token);
-
         try {
-            if (jwtTokenUtil.isTokenExpired(token)) {
-                // If the refresh token has expired, send a 401 Unauthorized response
-                ApiResponse apiResponse = new ApiResponse("Refresh token has expired. Please login again.");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
-            }
+            // Parse and validate the token in a single step
+            Claims claims = jwtTokenUtil.parseAndValidateToken(token);
 
-            // Validate and extract claims from the refresh token
-            Claims refreshClaims = jwtTokenUtil.extractRefreshClaims(token);
-            String email = refreshClaims.getSubject();
-            System.out.println(email);
-            String role = refreshClaims.get("role", String.class);
-            System.out.println(role);
-            String firstName = refreshClaims.get("firstName",String.class);
-            System.out.println(firstName);
-            String lastName = refreshClaims.get("lastName",String.class);
-            System.out.println(lastName);
-            String phoneNumber = refreshClaims.get("phoneNumber",String.class);
-            System.out.println(phoneNumber);
-            Double id = refreshClaims.get("uniqueId",Double.class);
-
-            Long uniqueId = id.longValue();
-
-            System.out.println(id);
+            // Extract necessary data from the token
+            String email = claims.getSubject();
+            String role = claims.get("role", String.class);
+            String firstName = claims.get("firstName", String.class);
+            String lastName = claims.get("lastName", String.class);
+            String phoneNumber = claims.get("phoneNumber", String.class);
+            Long uniqueId = claims.get("uniqueId", Double.class).longValue();
 
             // Generate a new access token
             WrapperClass wrapper = new WrapperClass();
@@ -339,17 +333,20 @@ public class AuthService {
             String newAccessToken = jwtTokenUtil.generateToken(wrapper);
 
             ApiResponse apiResponse = new ApiResponse("Access token refreshed successfully");
+
             return ResponseEntity.ok()
                     .header("Authorization", "Bearer " + newAccessToken)
+                    .header("Refresh-Token", token)
                     .body(apiResponse);
+
         } catch (ExpiredJwtException ex) {
             // Handle token expiration specifically
             ApiResponse apiResponse = new ApiResponse("Refresh token has expired. Please login again.");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
 
-        } catch (MalformedJwtException ex) {
-            // Handle invalid token structure
-            ApiResponse apiResponse = new ApiResponse("Invalid token format.");
+        } catch (MalformedJwtException | SignatureException ex) {
+            // Handle invalid token structure or signature issues
+            ApiResponse apiResponse = new ApiResponse("Invalid token format or signature.");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
 
         } catch (Exception ex) {
@@ -357,8 +354,9 @@ public class AuthService {
             ApiResponse apiResponse = new ApiResponse("Invalid or expired refresh token.");
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(apiResponse);
         }
-
     }
+
+
 
 
 }

@@ -2,19 +2,51 @@ openapi: 3.0.0
 servers:
   # Added by API Auto Mocking Plugin
   - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/SAHILKHANE410/FinanceApp/1.0.0
+    url: https://virtserver.swaggerhub.com/SAHILKHANE410/FinanceAppDemo/1.0.0
 info:
+  description: Finance Application
   version: "1.0.0"
-  title: Finance App
-  description: The API for running the the Finance Application
+  title: The API for running the the Finance Application
+  contact:
+    email: sahilkhane410@gmail.com
+  license:
+    name: Apache 2.0
+    url: 'http://www.apache.org/licenses/LICENSE-2.0.html'
+#tags:
+#  - name: Developers
+#    description: Secured Admin-only calls
+#  - name: developers
+#    description: Operations available to regular developers
 paths:
   /v1/auth/google:
-    post:
+    post :
       tags:
         - Authentication
-      summary: Verify Google Auth Token
-      description: This endpoint accepts a Google authentication token, validates it with Google’s authentication servers, and checks if the user is already registered. If the user is registered, a successful response is returned if not, the user need to register via a separate URL.
+      summary: Verify the Google  Auth token
       operationId: verifyGoogleAuthToken
+      description: This endpoint accepts a Google authentication token, validates it with Google’s authentication servers, and checks if the user is already registered. If the user is registered, a successful response is returned if not, the user need to register via a separate URL.
+#      parameters:
+#        - in: query
+#          name: searchString
+#          description: pass an optional search string for looking up inventory
+#          required: false
+#          schema:
+#            type: string
+#        - in: query
+#          name: skip
+#          description: number of records to skip for pagination
+#          schema:
+#            type: integer
+#            format: int32
+#            minimum: 0
+#        - in: query
+#          name: limit
+#          description: maximum number of records to return
+#          schema:
+#            type: integer
+#            format: int32
+#            minimum: 0
+#            maximum: 50
       requestBody:
         required: true
         content:
@@ -30,9 +62,79 @@ paths:
             example:
               idTokenString: >
                 eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg5Y2UzNTk4YzQ3M2FmMWJkYTRiZmY5NWU2Yzg3MzY0NTAyMDZmYmEiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiI2OTUyNDE4MjUwNy1tc3VydnM4a3NjcmlucGppNGt2Mms0dTFwN2Y4N2RsNy5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsImF1ZCI6IjY5NTI0MTgyNTA3LW1zdXJ2czhrc2NyaW5pamk0a3YyazR1MXA3Zjg3ZGw3LmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwic3ViIjoiMTAxNDg4Nzk2Mzk1OTM1NjAyMDg1IiwiaGQiOiJrYW5yaXMuYml6IiwiZW1haWwiOiJzYWhpbEBrYW5yaXMuYml6IiwiZW1haWxfdmVyaWZpZWQiOnRydWUsImF0X2hhc2giOiJDR2tvWHRzOUE0eUV2SXRrbFVCczdnIiwibm9uY2UiOiIzRWtWX3RVUHF0cHdWU1lZbzRnUFByWDV3eVFCQ1B2bWVBa00xTTBGV004IiwibmFtZSI6IlNhaGlsIEtoYW5lIiwicGljdHVyZSI6Imh0dHBzOi8vbGgzLmdvb2dsZXVzZXJjb250ZW50LmNvbS9hL0FDZzhvY0tUTDFwWEF3TUZtUUxHMzVQZDRFS05RT25IaTBEblE0bWpzdy1vWjNLeHBrU1dUdz1zOTYtYyIsImdpdmVuX25hbWUiOiJTYWhpbCIsImZhbWlseV9uYW1lIjoiS2hhbmUiLCJpYXQiOjE3MzYyMjk2NjcsImV4cCI6MTczNjIzMzI2N30.Puwavru7XUDuxmQeX1Xr1yH5VWElPB0-vlHrDBaxGNRnDN_Qz2cvH4TlufEUSxK_wmRrPTU7jU-Xu_q1xaSpafcrqI_zg6-Wm2H6NVuL3vSk1VOBL--fQXX_uJgRYWz_ZVvI54FXKI05oMaT9rxYwHUR3L3xEbPeBvblpv2AA2ut-Fo-rSFh2UKhJqkiv_w5FEbhFQGFZ8_1fbpqm9vVCGe46GNpUjxxElEauCihJ4wMxzWPnOPY58Kkv3eWIRqXIzZp9ye9Bi86Y9hTzUvhdDrXLo4Si7dbPe3hOLn7YMO46ECcTSUGD1iub_XA3r6lrInkEkdGsi6AtcamkzSOCg
+
       responses:
+
         '200':
-          description: Token verified successfully and user is already registered with this email and as a response a jwt token and user data fetched from database is returned to client .
+          description: Token verified successfully and user is already registered with this email. A JWT access token and refresh token along with user data fetched from the database is returned to the client.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  firstName:
+                    type: string
+                    description: First name of the user.
+                  lastName:
+                    type: string
+                    description: Last name of the user.
+                  email:
+                    type: string
+                    description: Email address of the user.
+                  phoneNumber:
+                    type: string
+                    description: Phone number of the user.
+                  userId:
+                    type: integer
+                    description: Unique identifier for the user.
+                  role:
+                    type: string
+                    description: User's role in the system (e.g., free, premium).
+                example:
+                  firstName: "BE_A_54_Sahil Khane"
+                  lastName: "Khane"
+                  email: "sahilsk20comp@student.mes.ac.in"
+                  phoneNumber: "7249087189"
+                  userId: 2
+                  role: "free"
+
+          headers:
+            Authorization:
+              description: JWT token for the authenticated user.
+              schema:
+                type: string
+                example: "Bearer eyJhbGciOiJ..."
+            Refresh-Token:
+              description: Refresh token for renewing the JWT token.
+              schema:
+                type: string
+                example: "eyJhbGciOiJIUza...."
+        '400':
+          description: Bad Request. The token ID is missing, not passed, or is empty in the request body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message indicating the issue with the request.
+                example:
+                  message: "Bad Request: ID token is missing or empty."
+        '401':
+          description: Unauthorized. Token is invalid or expired.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message indicating the token is invalid or expired.
+                example:
+                  message: "Unauthorized: Token is invalid or expired"
+        '404':
+          description: Not Found. User has not registered.
           content:
             application/json:
               schema:
@@ -49,39 +151,15 @@ paths:
                 example:
                   firstName: "Sahil"
                   lastName: "Khane"
-                  email: "sahil@kanris.biz"
-                  phone: "123-456-7890"
-        '401':
-          description: Unauthorized. Token is invalid or expired.Wrong google token or unauthorized google token passed in request body .
-        '404':
-          description: Not Found.  User has not registered .
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  firstName:
-                    type: string
-                  lastName:
-                    type: string
-                  email:
-                    type: string
-                  phone:
-                    type: string
-                example:
-                  "firstName": "sahil",
-                  "lastName": "khane",
-                  "phone": null,
-                  "email": "sahilkhane410@gmail.com"
-        '400':
-          description: Bad Request . Some field in the request body are missing or request body  that is sent from client to the server is empty .
+                  phone: null
+                  email: "sahilkhane410@gmail.com"
 
   /v1/auth/register:
     post:
       tags:
         - Authentication
       summary: Registration Api
-      description: This API endpoint accepts a payload of user data and checks if the user exists in the database. If the user does not exist, a new user is created. If the user already exists, the user’s data is fetched, and a JWT token is generated for further use.
+      description: This API endpoint accepts a payload of user data and checks if the user exists in the database. If the user does not exist, a new user is created and as a response user data , access token and refresh token are send to the client. If the user already exists, the user’s data is fetched, and a JWT access  token and refresh token is generated and send to the client.
       operationId: verifyAndProcessGoogleAuthToken
       requestBody:
         description: User data to send (First Name, Last Name, Email, Phone).
@@ -103,7 +181,7 @@ paths:
                 firstName: "Sahil"
                 lastName: "Khane"
                 email: "sahil@kanris.biz"
-                phone: "123-456-7890"
+                phone: "7249087189"
       responses:
         '201':
           description: New User Registered . A new user is registered whose entry is not in the database . So new entry is made in db and a user details and jwt token is send in response.
@@ -127,17 +205,22 @@ paths:
                 firstName: "Sahil"
                 lastName: "Khane"
                 email: "sahil@kanris.biz"
-                phoneNumber: "123-456-7890"
+                phoneNumber: "7249087189"
           headers:
             Authorization:
               description: JWT token for authenticated user
               schema:
                 type: string
-                example: "	
-Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYWhpbGtoYW5lNDEsI..."
+                example: " 
+  Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYWhpbGtoYW5lNDEsI..."
+            Refresh-Token:
+              description: Refresh token for renewing the JWT token.
+              schema:
+                type: string
+                example: "eyJhbGciOiJIUza...."
 
         '200':
-          description: User is already registered and present in the database  . So only user data is fetched and send to  the client along with jwt token
+          description: User already registered . User is already registered and present in the database  . So  user data is fetched from the database and send to the client along with jwt access token and refresh token .
           content:
             application/json:
               schema:
@@ -153,246 +236,299 @@ Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYWhpbGtoYW5lNDEsI..."
                     type: string
                   phoneNumber:
                     type: string
+                  role:
+                    type:string
+
               example:
                 userId: "12345"
                 firstName: "Sahil"
                 lastName: "Khane"
                 email: "sahil@kanris.biz"
-                phoneNumber: "123-456-7890"
+                phoneNumber: "7249087189"
+                role: "free"
           headers:
             Authorization:
               description: JWT token for authenticated user
               schema:
                 type: string
                 example: "eyJhbGciOiJIUzI1NiJ9.e....."
-
+            Refresh-Token:
+              description: Refresh token for renewing the JWT token.
+              schema:
+                type: string
+                example: "eyJhbGciOiJIUzaWFWWU...."
         '400':
           description: Bad Request . Some field in the request body are missing that is sent from client to the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message indicating the issue with the request.
+                example:
+                  message: "Bad Request: Request body is missing or malformed."
         '409':
-          description: Conflict. User with this email or phone already registered . Refer to the body data that will be receive it will tell exactly whether phone number is already present in db or email.
+          description: Conflict. User with this email or phone already registered. The body data will specify whether the phone number or email is already present in the database.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A message explaining the conflict (email or phone number).
+              examples:
+                emailConflict:
+                  summary: User has already registered with the email and trying to set another phone other than registered number.
+                  value:
+                    message: "User with this email already registered"
+                phoneConflict:
+                  summary:  User has already registered with the phone and trying to set another email other than registered email.
+                  value:
+                    message: "User with this phone already registered"
+
+
+  /v1/auth/refresh:
+    post:
+      tags:
+        - Authentication
+      summary: Refresh JWT access token using a refresh token
+      description: This endpoint allows the user to refresh their access token by providing a valid refresh token.
+      operationId: refreshToken
+      requestBody:
+        description: The request body should contain a valid refresh token.
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                token:
+                  type: string
+                  description: The refresh token that will be used to generate a new access token.
+              example:
+                token: "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYWhpbGtoYW5lNDEwQGdtYWlsLmNvbSIsImZpcnN0TmFtZSI6InNhaGlsIiwibGFzdE5hbWUiOiJraGFuZSIsInBob25lTnVtYmVyIjoiNzI0OTA4NzE4OSIsInVuaXF1ZUlkIjoxLCJyb2xlIjoicHJlbWl1bSIsImlhdCI6MTczNjUxMzgwNywiZXhwIjoxNzM2NTEzODY3LCJpc3MiOiJGaW5hbmNlRGVtb0FwcCIsImp0aSI6ImI1Yjc0MGJlLTViZjItNDMyMi1hNDc1LWY5ZDhmNTdhZTkwNCJ9.OhZuj88C5io8L1hVnb_PqaIov4nteehVzAjZ9JxrIac"
+      responses:
+        '200':
+          description: Successfully refreshed the access token
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Success message
+                    example: "Access token refreshed successfully"
+          headers:
+            Authorization:
+              description: New Jwt access token.
+              schema:
+                type: string
+                example: "Bearer eyJhbGciOiJ..."
+            Refresh-Token:
+              description: Same refresh token that we had send .
+              schema:
+                type: string
+                example: "eyJhbGciOiJIUz ... ."
+        '400':
+          description:
+            Bad Request. Possible reasons: Refresh token is missing, invalid, or the request body is missing/malformed.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message for invalid or missing token, or missing/malformed request body.
+                    example: "Refresh token is missing or invalid."
+              examples:
+                missingToken:
+                  value:
+                    message: "Invalid token format or signature."
+                missingBody:
+                  value:
+                    message: "Bad Request: Request body is missing or malformed."
+
+        '401':
+          description: Unauthorized. The refresh token has expired.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message for expired refresh token.
+                    example: "Refresh token has expired. Please register again."
+        '403':
+          description: Forbidden. Invalid or expired refresh token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message for invalid or expired refresh token.
+                    example: "Invalid or expired refresh token."
+        '404':
+          description: Not Found. The token is not recognized or the user does not exist.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message for unrecognized token.
+                    example: "User not found or token is invalid."
+        '500':
+          description: Internal Server Error. Something went wrong on the server.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message for server-side issues.
+                    example: "Internal server error occurred."
+  /update-role:
+    put:
+      tags:
+        - User Management
+      summary: Update the user's role.
+      description: Updates the user's role based on the provided JWT token and new role value. Requires `Bearer` token in the header.
+      operationId: updateRole
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                role:
+                  type: string
+                  description: The new role to assign to the user.
+                  example: "premium"
+      parameters:
+        - in: header
+          name: Authorization
+          required: true
+          description: Bearer token with JWT.
+          schema:
+            type: string
+            example: "Bearer eyJhbGciOiJIUzI1NiJ9..."
+      responses:
+        '200':
+          description: Role updated successfully.
+          headers:
+            Authorization:
+              description: The new JWT access token returned with "Bearer" prefix.
+              schema:
+                type: string
+              example: "Bearer eyJhbGciOiJIUzI1NiJ9..."
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Success message.
+                    example: "User role has been updated to premium."
+        '400':
+          description: Bad Request. Possible issues include invalid role or malformed body.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message.
+              examples:
+                invalidRole:
+                  value:
+                    message: "The incorrect value for string received in body."
+                missingBody:
+                  value:
+                    message: "Bad Request: Request body is missing or malformed."
+        '401':
+          description: Unauthorized. Possible issues include missing or invalid JWT token.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message.
+                    example: "Invalid or expired token."
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message indicating the user was not found.
+                    example: "User does not exist in the database."
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Generic error message for unexpected server errors.
+                    example: "An unexpected error occurred."
+
 
 
 components:
   schemas:
-    LightingSummary:
-      type: object
-      properties:
-        zones:
-          type: array
-          items:
-            $ref: '#/components/schemas/LightingZone'
-        zoneStatus:
-          type: array
-          items:
-            $ref: '#/components/schemas/LightingZoneStatus'
-      description: ok
-    LightingZone:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        deviceId:
-          type: integer
-          format: int32
-        deviceType:
-          type: string
-          enum:
-            - dimmer
-            - switch
-        zone:
-          type: string
-    LightingZoneStatus:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        lastUpdate:
-          type: string
-          format: date-time
-        level:
-          type: integer
-          format: int32
-      description: the status of the lighting zone.
-    TemperatureSummary:
-      type: object
-      properties:
-        zones:
-          type: array
-          items:
-            $ref: '#/components/schemas/TemperatureZone'
-        zoneStatus:
-          type: array
-          items:
-            $ref: '#/components/schemas/TemperatureZoneStatus'
-      description: ok
-    TemperatureZone:
+    InventoryItem:
       type: object
       required:
         - id
         - name
+        - manufacturer
+        - releaseDate
       properties:
-        id:
-          type: integer
-          format: int32
-          description: the unique identifier for the zone
-        name:
-          type: string
-        inputPosition:
-          type: integer
-          format: int32
-        outputPosition:
-          type: integer
-          format: int32
-        zone:
-          type: string
-      description: a single temperature zone
-    TemperatueZoneStatus:
-      type: object
-      required:
-        - id
-        - timestamp
-        - value
-      properties:
-        id:
-          type: string
-          description: the unique identifier for the zone
-        name:
-          type: string
-          description: the name of the zone
-        value:
-          type: number
-          format: double
-          description: the temperature in the zone
-        units:
-          type: string
-          description: the temperature units
-          enum:
-            - celsius
-            - fahrenheit
-          default: fahrenheit
-        timestamp:
-          type: string
-          format: date-time
-          description: the timestamp when the temperature was measured
-      description: status of a single zone
-    ApiResponse:
-      type: object
-      properties:
-        code:
-          type: integer
-          format: int32
-        message:
-          type: string
-          example: everything is ok
-    HeaterState:
-      type: object
-      properties:
-        id:
-          type: string
-        state:
-          type: string
-    DeviceState:
-      type: object
-      properties:
-        id:
-          type: string
-        name:
-          type: string
-        lastUpdate:
-          type: string
-          format: date-time
-        level:
-          type: integer
-          format: int32
-    ForecastResponse:
-      type: object
-      properties:
-        city:
-          $ref: '#/components/schemas/City'
-        values:
-          type: array
-          items:
-            $ref: '#/components/schemas/Forecast'
-    Forecast:
-      type: object
-      properties:
-        date:
-          type: string
-          format: date-time
-        pressure:
-          type: number
-          format: double
-        humidity:
-          type: integer
-          format: int32
-        windSpeed:
-          type: number
-          format: double
-        clouds:
-          type: integer
-          format: int32
-        temperature:
-          $ref: '#/components/schemas/ForecastTemperature'
-        weather:
-          $ref: '#/components/schemas/WeatherForecast'
-    City:
-      type: object
-      properties:
-        id:
-          type: integer
-          format: int64
-        name:
-          type: string
-        lat:
-          type: number
-          format: double
-        lon:
-          type: number
-          format: double
-        country:
-          type: string
-    ForecastTemperature:
-      type: object
-      properties:
-        low:
-          type: number
-          format: double
-        high:
-          type: number
-          format: double
-        morning:
-          type: number
-          format: double
-        day:
-          type: number
-          format: double
-        evening:
-          type: number
-          format: double
-        night:
-          type: number
-          format: double
-    WeatherForecast:
-      type: object
-      properties:
-        summary:
-          type: string
-        description:
-          type: string
-        icon:
-          type: string
-    DeviceRegistrationInfo:
-      type: object
-      properties:
-        uri:
-          type: string
-          format: uri
-          example: 'http://10.0.0.220:8080'
         id:
           type: string
           format: uuid
-          example: 0729a580-2240-11e6-9eb5-0002a5d5c51b
+          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+        name:
+          type: string
+          example: Widget Adapter
+        releaseDate:
+          type: string
+          format: date-time
+          example: '2016-08-29T09:12:33.001Z'
+        manufacturer:
+          $ref: '#/components/schemas/Manufacturer'
+    Manufacturer:
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          example: ACME Corporation
+        homePage:
+          type: string
+          format: url
+          example: 'https://www.acme-corp.com'
+        phone:
+          type: string
+          example: 408-867-5309
+      type: object
