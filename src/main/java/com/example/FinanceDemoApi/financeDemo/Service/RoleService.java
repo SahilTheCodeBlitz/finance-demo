@@ -7,6 +7,7 @@ import com.example.FinanceDemoApi.financeDemo.Repository.UserRepository;
 import com.example.FinanceDemoApi.financeDemo.Utility.ApiResponse;
 import com.example.FinanceDemoApi.financeDemo.Utility.JwtTokenUtil;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
@@ -28,13 +29,13 @@ public class RoleService {
 
     private static final List<String> VALID_ROLES = Arrays.asList("free", "premium", "gold", "silver");
 
-    @Transactional
+
     public ResponseEntity<?> updateRole(String tokenHeader, String newRole) {
         // Check if the token is provided and follows the 'Bearer <token>' format
-        if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
-            ApiResponse apiResponse = new ApiResponse("Invalid Token");
-            return new ResponseEntity<>(apiResponse,HttpStatus.UNAUTHORIZED);
-        }
+//        if (tokenHeader == null || !tokenHeader.startsWith("Bearer ")) {
+//            ApiResponse apiResponse = new ApiResponse("Invalid Token");
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
+//        }
 
         if (!VALID_ROLES.contains(newRole)){
             ApiResponse apiResponse = new ApiResponse("The incorrect value for string received in body ");
@@ -55,7 +56,7 @@ public class RoleService {
             Optional<UserSchema> userOptional = userRepository.findById(id);
             if (userOptional.isEmpty()) {
                 ApiResponse apiResponse = new ApiResponse("User does not exist in the database");
-                return new ResponseEntity<>(apiResponse,HttpStatus.NOT_FOUND);
+                return new ResponseEntity<>(apiResponse, HttpStatus.NOT_FOUND);
             }
 
 
@@ -68,7 +69,6 @@ public class RoleService {
             String lastName = claims.get("lastName", String.class);
             String phoneNumber = claims.get("phoneNumber", String.class);
             String sub = claims.getSubject();
-
 
 
             // Generate a new JWT token with updated role
@@ -90,15 +90,21 @@ public class RoleService {
             String newRefreshToken = jwtTokenUtil.generateRefreshToken(wrapperClass);
 
             // Send response with updated role and new token
-            ApiResponse apiResponse = new ApiResponse("User role has updated to "+newRole);
+            ApiResponse apiResponse = new ApiResponse("User role has updated to " + newRole);
             return ResponseEntity.ok()
                     .header("Authorization", "Bearer " + newToken)
-                    .header("Refresh-Token",newRefreshToken)
+                    .header("Refresh-Token", newRefreshToken)
                     .body(apiResponse);
 
-        } catch (Exception e) {
-            ApiResponse apiResponse = new ApiResponse("Invalid or expired token");
-            return ResponseEntity.status(401).body(apiResponse);
+        }
+//        }catch (ExpiredJwtException ex) {
+//            // Handle token expiration specifically
+//            ApiResponse apiResponse = new ApiResponse("Access token has expired");
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
+//        }
+        catch (Exception e) {
+            ApiResponse apiResponse = new ApiResponse("Internal Server Error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(apiResponse);
         }
     }
 

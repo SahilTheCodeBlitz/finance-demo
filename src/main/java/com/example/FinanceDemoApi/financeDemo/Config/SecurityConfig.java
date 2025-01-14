@@ -1,6 +1,7 @@
 package com.example.FinanceDemoApi.financeDemo.Config;
 
 import com.example.FinanceDemoApi.financeDemo.Filters.JwtAuthenticationFilter;
+import com.example.FinanceDemoApi.financeDemo.Utility.SetJsonResponse;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -56,8 +57,10 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {
-                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                            response.getWriter().write("Authentication is required or token is invalid");
+//                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//                            response.getWriter().write("Authentication is required or token is invalid");
+                            SetJsonResponse setJsonResponse = new SetJsonResponse();
+                            setJsonResponse.setJsonErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "Authentication is required or token is invalid");
                         })
                 )
                 .authorizeHttpRequests(request -> request

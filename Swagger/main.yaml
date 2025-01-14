@@ -396,9 +396,9 @@ paths:
                 properties:
                   message:
                     type: string
-                    description: Error message for server-side issues.
+                    description: Error message for server-side issues.final
                     example: "Internal server error occurred."
-  /update-role:
+  /v1/role/updateRole:
     put:
       tags:
         - User Management
@@ -466,16 +466,22 @@ paths:
                   value:
                     message: "Bad Request: Request body is missing or malformed."
         '401':
-          description: Unauthorized. Possible issues include missing or invalid JWT token.
+          description: Unauthorized access due to token issues.
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    description: Error message.
-                    example: "Invalid or expired token."
+              examples:
+                expiredToken:
+                  summary: Token Expired
+                  value:
+                    message: "Expired Jwt token"
+                invalidToken:
+                  summary: Invalid Token
+                  value:
+                    message: "Invalid JWT token"
+                authRequired:
+                  summary: Authentication Required
+                  value:
+                    message: "Authentication is required or token is invalid"
         '404':
           description: User not found.
           content:

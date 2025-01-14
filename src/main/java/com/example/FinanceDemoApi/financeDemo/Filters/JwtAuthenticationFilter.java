@@ -1,5 +1,6 @@
     package com.example.FinanceDemoApi.financeDemo.Filters;
 
+    import com.example.FinanceDemoApi.financeDemo.Utility.SetJsonResponse;
     import io.jsonwebtoken.Claims;
     import io.jsonwebtoken.JwtException;
     import io.jsonwebtoken.Jwts;
@@ -78,12 +79,18 @@
     //                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
     //                }
                 } catch (io.jsonwebtoken.ExpiredJwtException e) {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.getWriter().write("JWT token has expired");
+//                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//                    response.getWriter().write("JWT token has expired");
+                    SetJsonResponse setJsonResponse = new SetJsonResponse();
+                    setJsonResponse.setJsonErrorResponse(response,HttpServletResponse.SC_UNAUTHORIZED,"Expired Jwt token");
+
                     return;
-                } catch (JwtException e) {
-                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                    response.getWriter().write("Invalid JWT token");
+                }
+                catch (JwtException e) {
+//                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//                    response.getWriter().write("Invalid JWT token");
+                    SetJsonResponse setJsonResponse = new SetJsonResponse();
+                    setJsonResponse.setJsonErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "Invalid JWT token");
                     return;
 
                 }
