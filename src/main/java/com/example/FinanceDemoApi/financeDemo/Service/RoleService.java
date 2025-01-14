@@ -87,10 +87,13 @@ public class RoleService {
 
             String newToken = jwtTokenUtil.generateToken(wrapperClass);
 
+            String newRefreshToken = jwtTokenUtil.generateRefreshToken(wrapperClass);
+
             // Send response with updated role and new token
             ApiResponse apiResponse = new ApiResponse("User role has updated to "+newRole);
             return ResponseEntity.ok()
                     .header("Authorization", "Bearer " + newToken)
+                    .header("Refresh-Token",newRefreshToken)
                     .body(apiResponse);
 
         } catch (Exception e) {

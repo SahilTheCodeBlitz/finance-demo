@@ -492,43 +492,85 @@ paths:
                     description: Generic error message for unexpected server errors.
                     example: "An unexpected error occurred."
 
-
-
 components:
   schemas:
-    InventoryItem:
+    ContactSchema:
       type: object
-      required:
-        - id
-        - name
-        - manufacturer
-        - releaseDate
       properties:
-        id:
+        uniqueId:
+          type: integer
+          format: int64
+          description: Unique identifier for the contact.
+        userSchema:
+          $ref: '#/components/schemas/UserSchema'
+          description: Associated user.
+        contactInfo:
           type: string
-          format: uuid
-          example: d290f1ee-6c54-4b01-90e6-d701748f0851
-        name:
+          description: Contact information (email, phone, etc.).
+        contactType:
           type: string
-          example: Widget Adapter
-        releaseDate:
-          type: string
-          format: date-time
-          example: '2016-08-29T09:12:33.001Z'
-        manufacturer:
-          $ref: '#/components/schemas/Manufacturer'
-    Manufacturer:
-      required:
-        - name
-      properties:
-        name:
-          type: string
-          example: ACME Corporation
-        homePage:
-          type: string
-          format: url
-          example: 'https://www.acme-corp.com'
-        phone:
-          type: string
-          example: 408-867-5309
+          description: Type of contact.
+          enum:
+            - EMAIL
+            - PHONE
+            - SOCIAL
+    UserSchema:
       type: object
+      properties:
+        primaryKey:
+          type: integer
+          format: int64
+          description: Unique identifier for the user.
+        firstName:
+          type: string
+          description: First name of the user.
+        lastName:
+          type: string
+          description: Last name of the user.
+        createdDate:
+          type: integer
+          format: int64
+          description: Timestamp of when the user was created.
+        role:
+          type: string
+          description: Role of the user.
+          default: free
+
+#components:
+#  schemas:
+#    InventoryItem:
+#      type: object
+#      required:
+#        - id
+#        - name
+#        - manufacturer
+#        - releaseDate
+#      properties:
+#        id:
+#          type: string
+#          format: uuid
+#          example: d290f1ee-6c54-4b01-90e6-d701748f0851
+#        name:
+#          type: string
+#          example: Widget Adapter
+#        releaseDate:
+#          type: string
+#          format: date-time
+#          example: '2016-08-29T09:12:33.001Z'
+#        manufacturer:
+#          $ref: '#/components/schemas/Manufacturer'
+#    Manufacturer:
+#      required:
+#        - name
+#      properties:
+#        name:
+#          type: string
+#          example: ACME Corporation
+#        homePage:
+#          type: string
+#          format: url
+#          example: 'https://www.acme-corp.com'
+#        phone:
+#          type: string
+#          example: 408-867-5309
+#      type: object
