@@ -3394,3 +3394,126 @@ io.jsonwebtoken.MalformedJwtException: Invalid compact JWT string: Compact JWSs 
 2025-01-14T14:00:35.028+05:30 DEBUG 27080 --- [financeDemo] [MyHikariCP connection closer] com.zaxxer.hikari.pool.PoolBase          : MyHikariCP - Closing connection com.mysql.cj.jdbc.ConnectionImpl@252e92ad: (connection evicted)
 2025-01-14T14:00:35.029+05:30 DEBUG 27080 --- [financeDemo] [SpringApplicationShutdownHook] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - After shutdown stats (total=0, active=0, idle=0, waiting=0)
 2025-01-14T14:00:35.029+05:30  INFO 27080 --- [financeDemo] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : MyHikariCP - Shutdown completed.
+2025-01-14T14:00:52.761+05:30  INFO 6300 --- [financeDemo] [main] c.e.F.f.FinanceDemoApplication           : Starting FinanceDemoApplication using Java 23.0.1 with PID 6300 (C:\Users\welcome\Desktop\financeDemo\target\classes started by welcome in C:\Users\welcome\Desktop\financeDemo)
+2025-01-14T14:00:52.767+05:30 DEBUG 6300 --- [financeDemo] [main] c.e.F.f.FinanceDemoApplication           : Running with Spring Boot v3.4.1, Spring v6.2.1
+2025-01-14T14:00:52.769+05:30  INFO 6300 --- [financeDemo] [main] c.e.F.f.FinanceDemoApplication           : No active profile set, falling back to 1 default profile: "default"
+2025-01-14T14:00:56.016+05:30  INFO 6300 --- [financeDemo] [main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-01-14T14:00:56.257+05:30  INFO 6300 --- [financeDemo] [main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 207 ms. Found 2 JPA repository interfaces.
+2025-01-14T14:00:58.169+05:30  INFO 6300 --- [financeDemo] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-01-14T14:00:58.196+05:30  INFO 6300 --- [financeDemo] [main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-01-14T14:00:58.197+05:30  INFO 6300 --- [financeDemo] [main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.34]
+2025-01-14T14:00:58.343+05:30  INFO 6300 --- [financeDemo] [main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-01-14T14:00:58.344+05:30  INFO 6300 --- [financeDemo] [main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 5416 ms
+2025-01-14T14:00:58.508+05:30 DEBUG 6300 --- [financeDemo] [main] c.e.F.f.Filters.JwtAuthenticationFilter  : Filter 'jwtAuthenticationFilter' configured for use
+2025-01-14T14:00:58.539+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : Driver class com.mysql.cj.jdbc.Driver found in Thread context class loader jdk.internal.loader.ClassLoaders$AppClassLoader@5a07e868
+2025-01-14T14:00:58.829+05:30  INFO 6300 --- [financeDemo] [main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-01-14T14:00:59.053+05:30  INFO 6300 --- [financeDemo] [main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.4.Final
+2025-01-14T14:00:59.140+05:30  INFO 6300 --- [financeDemo] [main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-01-14T14:01:00.445+05:30  INFO 6300 --- [financeDemo] [main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-01-14T14:01:00.547+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : MyHikariCP - configuration:
+2025-01-14T14:01:00.554+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : allowPoolSuspension.............false
+2025-01-14T14:01:00.555+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : autoCommit......................true
+2025-01-14T14:01:00.556+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : catalog.........................none
+2025-01-14T14:01:00.556+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : connectionInitSql...............none
+2025-01-14T14:01:00.556+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : connectionTestQuery.............none
+2025-01-14T14:01:00.558+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : connectionTimeout...............20000
+2025-01-14T14:01:00.559+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : dataSource......................none
+2025-01-14T14:01:00.559+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : dataSourceClassName.............none
+2025-01-14T14:01:00.559+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : dataSourceJNDI..................none
+2025-01-14T14:01:00.560+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : dataSourceProperties............{password=<masked>}
+2025-01-14T14:01:00.561+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : driverClassName................."com.mysql.cj.jdbc.Driver"
+2025-01-14T14:01:00.561+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : exceptionOverrideClassName......none
+2025-01-14T14:01:00.562+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : healthCheckProperties...........{}
+2025-01-14T14:01:00.563+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : healthCheckRegistry.............none
+2025-01-14T14:01:00.565+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : idleTimeout.....................30000
+2025-01-14T14:01:00.566+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : initializationFailTimeout.......1
+2025-01-14T14:01:00.566+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : isolateInternalQueries..........false
+2025-01-14T14:01:00.566+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : jdbcUrl.........................jdbc:mysql://localhost:3306/financedemodatabase
+2025-01-14T14:01:00.567+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : keepaliveTime...................0
+2025-01-14T14:01:00.567+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : leakDetectionThreshold..........0
+2025-01-14T14:01:00.568+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : maxLifetime.....................1800000
+2025-01-14T14:01:00.568+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : maximumPoolSize.................20
+2025-01-14T14:01:00.569+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : metricRegistry..................none
+2025-01-14T14:01:00.570+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : metricsTrackerFactory...........none
+2025-01-14T14:01:00.570+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : minimumIdle.....................5
+2025-01-14T14:01:00.571+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : password........................<masked>
+2025-01-14T14:01:00.572+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : poolName........................"MyHikariCP"
+2025-01-14T14:01:00.573+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : readOnly........................false
+2025-01-14T14:01:00.573+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : registerMbeans..................false
+2025-01-14T14:01:00.573+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : scheduledExecutor...............none
+2025-01-14T14:01:00.574+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : schema..........................none
+2025-01-14T14:01:00.575+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : threadFactory...................internal
+2025-01-14T14:01:00.576+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : transactionIsolation............default
+2025-01-14T14:01:00.577+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : username........................"root"
+2025-01-14T14:01:00.577+05:30 DEBUG 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariConfig           : validationTimeout...............5000
+2025-01-14T14:01:00.578+05:30  INFO 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariDataSource       : MyHikariCP - Starting...
+2025-01-14T14:01:01.052+05:30  INFO 6300 --- [financeDemo] [main] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Added connection com.mysql.cj.jdbc.ConnectionImpl@6f2d3391
+2025-01-14T14:01:01.056+05:30  INFO 6300 --- [financeDemo] [main] com.zaxxer.hikari.HikariDataSource       : MyHikariCP - Start completed.
+2025-01-14T14:01:01.131+05:30  WARN 6300 --- [financeDemo] [main] org.hibernate.dialect.Dialect            : HHH000511: The 5.5.5 version for [org.hibernate.dialect.MySQLDialect] is no longer supported, hence certain features may not work properly. The minimum supported version is 8.0.0. Check the community dialects project for available legacy versions.
+2025-01-14T14:01:01.147+05:30  WARN 6300 --- [financeDemo] [main] org.hibernate.orm.deprecation            : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-01-14T14:01:01.156+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Before cleanup stats (total=1, active=1, idle=0, waiting=0)
+2025-01-14T14:01:01.158+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - After cleanup  stats (total=1, active=1, idle=0, waiting=0)
+2025-01-14T14:01:01.175+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP connection adder] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Added connection com.mysql.cj.jdbc.ConnectionImpl@7d42014b
+2025-01-14T14:01:01.219+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP connection adder] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - After adding stats (total=2, active=0, idle=2, waiting=0)
+2025-01-14T14:01:01.226+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP connection adder] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Added connection com.mysql.cj.jdbc.ConnectionImpl@3c7f0b70
+2025-01-14T14:01:01.227+05:30  INFO 6300 --- [financeDemo] [main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (MyHikariCP)']
+	Database driver: undefined/unknown
+	Database version: 5.5.5
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2025-01-14T14:01:01.264+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP connection adder] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - After adding stats (total=3, active=0, idle=3, waiting=0)
+2025-01-14T14:01:01.270+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP connection adder] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Added connection com.mysql.cj.jdbc.ConnectionImpl@d09371a
+2025-01-14T14:01:01.311+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP connection adder] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - After adding stats (total=4, active=0, idle=4, waiting=0)
+2025-01-14T14:01:01.325+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP connection adder] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Added connection com.mysql.cj.jdbc.ConnectionImpl@5c50f43f
+2025-01-14T14:01:01.392+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP connection adder] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - After adding stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:01:01.392+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP connection adder] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Connection not added, stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:01:03.444+05:30  INFO 6300 --- [financeDemo] [main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-01-14T14:01:03.933+05:30  INFO 6300 --- [financeDemo] [main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-01-14T14:01:04.852+05:30  WARN 6300 --- [financeDemo] [main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-01-14T14:01:06.277+05:30  INFO 6300 --- [financeDemo] [main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+2025-01-14T14:01:06.324+05:30  INFO 6300 --- [financeDemo] [main] c.e.F.f.FinanceDemoApplication           : Started FinanceDemoApplication in 14.96 seconds (process running for 16.604)
+2025-01-14T14:01:14.670+05:30  INFO 6300 --- [financeDemo] [http-nio-8080-exec-2] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-01-14T14:01:14.671+05:30  INFO 6300 --- [financeDemo] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2025-01-14T14:01:14.675+05:30  INFO 6300 --- [financeDemo] [http-nio-8080-exec-2] o.s.web.servlet.DispatcherServlet        : Completed initialization in 3 ms
+2025-01-14T14:01:31.164+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Before cleanup stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:01:31.165+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - After cleanup  stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:01:31.165+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Fill pool skipped, pool has sufficient level or currently being filled.
+2025-01-14T14:02:01.169+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Before cleanup stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:02:01.170+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - After cleanup  stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:02:01.171+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Fill pool skipped, pool has sufficient level or currently being filled.
+2025-01-14T14:02:31.182+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Before cleanup stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:02:31.183+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - After cleanup  stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:02:31.184+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Fill pool skipped, pool has sufficient level or currently being filled.
+2025-01-14T14:03:01.194+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Before cleanup stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:03:01.195+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - After cleanup  stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:03:01.196+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Fill pool skipped, pool has sufficient level or currently being filled.
+2025-01-14T14:03:31.208+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Before cleanup stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:03:31.208+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - After cleanup  stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:03:31.209+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Fill pool skipped, pool has sufficient level or currently being filled.
+2025-01-14T14:04:01.224+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Before cleanup stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:04:01.228+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - After cleanup  stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:04:01.230+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Fill pool skipped, pool has sufficient level or currently being filled.
+2025-01-14T14:04:31.239+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Before cleanup stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:04:31.242+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - After cleanup  stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:04:31.243+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Fill pool skipped, pool has sufficient level or currently being filled.
+2025-01-14T14:05:01.258+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Before cleanup stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:05:01.259+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - After cleanup  stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:05:01.259+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Fill pool skipped, pool has sufficient level or currently being filled.
+2025-01-14T14:05:31.271+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Before cleanup stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:05:31.274+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - After cleanup  stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:05:31.284+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP housekeeper] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Fill pool skipped, pool has sufficient level or currently being filled.
+2025-01-14T14:05:40.528+05:30  INFO 6300 --- [financeDemo] [SpringApplicationShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
+2025-01-14T14:05:40.568+05:30  INFO 6300 --- [financeDemo] [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
+2025-01-14T14:05:40.589+05:30  INFO 6300 --- [financeDemo] [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-01-14T14:05:40.619+05:30  INFO 6300 --- [financeDemo] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : MyHikariCP - Shutdown initiated...
+2025-01-14T14:05:40.619+05:30 DEBUG 6300 --- [financeDemo] [SpringApplicationShutdownHook] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - Before shutdown stats (total=5, active=0, idle=5, waiting=0)
+2025-01-14T14:05:40.622+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP connection closer] com.zaxxer.hikari.pool.PoolBase          : MyHikariCP - Closing connection com.mysql.cj.jdbc.ConnectionImpl@6f2d3391: (connection evicted)
+2025-01-14T14:05:40.663+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP connection closer] com.zaxxer.hikari.pool.PoolBase          : MyHikariCP - Closing connection com.mysql.cj.jdbc.ConnectionImpl@7d42014b: (connection evicted)
+2025-01-14T14:05:40.664+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP connection closer] com.zaxxer.hikari.pool.PoolBase          : MyHikariCP - Closing connection com.mysql.cj.jdbc.ConnectionImpl@3c7f0b70: (connection evicted)
+2025-01-14T14:05:40.665+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP connection closer] com.zaxxer.hikari.pool.PoolBase          : MyHikariCP - Closing connection com.mysql.cj.jdbc.ConnectionImpl@d09371a: (connection evicted)
+2025-01-14T14:05:40.666+05:30 DEBUG 6300 --- [financeDemo] [MyHikariCP connection closer] com.zaxxer.hikari.pool.PoolBase          : MyHikariCP - Closing connection com.mysql.cj.jdbc.ConnectionImpl@5c50f43f: (connection evicted)
+2025-01-14T14:05:40.666+05:30 DEBUG 6300 --- [financeDemo] [SpringApplicationShutdownHook] com.zaxxer.hikari.pool.HikariPool        : MyHikariCP - After shutdown stats (total=0, active=0, idle=0, waiting=0)
+2025-01-14T14:05:40.666+05:30  INFO 6300 --- [financeDemo] [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : MyHikariCP - Shutdown completed.
