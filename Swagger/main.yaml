@@ -324,15 +324,16 @@ paths:
                     example: "Access token refreshed successfully"
           headers:
             Authorization:
-              description: New Jwt access token.
+              description: JWT token for authenticated user
               schema:
                 type: string
-                example: "Bearer eyJhbGciOiJ..."
+                example: " 
+          Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYWhpbGtoYW5lNDEsI..."
             Refresh-Token:
-              description: Same refresh token that we had send .
+              description: Refresh token for renewing the JWT token.
               schema:
                 type: string
-                example: "eyJhbGciOiJIUz ... ."
+                example: "eyJhbGciOiJIUza...."
         '400':
           description:
             Bad Request. Possible reasons: Refresh token is missing, invalid, or the request body is missing/malformed.
@@ -428,10 +429,16 @@ paths:
           description: Role updated successfully.
           headers:
             Authorization:
-              description: The new JWT access token returned with "Bearer" prefix.
+              description: New Jwt Access Token
               schema:
                 type: string
-              example: "Bearer eyJhbGciOiJIUzI1NiJ9..."
+                example: " 
+          Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzYWhpbGtoYW5lNDEsI..."
+            Refresh-Token:
+              description: New Jwt Refresh Token
+              schema:
+                type: string
+                example: "eyJhbGciOiJIUza...."
           content:
             application/json:
               schema:
