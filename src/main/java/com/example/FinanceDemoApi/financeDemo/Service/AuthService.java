@@ -35,8 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collections;
 
-import java.util.HashMap;
-import java.util.Map;
+
 import java.util.Optional;
 
 
@@ -113,11 +112,6 @@ public class AuthService {
                     String jwtRefresh = jwtTokenUtil.generateRefreshToken(wrapperClass);
 
 
-//
-
-//                    return ResponseEntity.ok()
-//                            .header("Authorization", "Bearer " + jwtAccess)
-//                            .body(wrapperClass.toString()); // user already registered with email
 
                     return ResponseEntity.ok()
                             .header("Authorization", "Bearer " + jwtAccess)
@@ -164,7 +158,6 @@ public class AuthService {
                     responseWrapper.setFirstName(firstName);
                     responseWrapper.setLastName(lastName);
 
-//                    ApiResponse apiResponse = new ApiResponse("User has not registered");
 
                     return new ResponseEntity<>(responseWrapper,HttpStatus.NOT_FOUND);
                 }

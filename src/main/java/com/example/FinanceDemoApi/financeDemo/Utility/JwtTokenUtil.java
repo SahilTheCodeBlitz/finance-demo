@@ -39,7 +39,7 @@ public class JwtTokenUtil {
                 .claim("uniqueId",uniqueId)
                 .claim("role",role)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60))// 40 seconds
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 2))// 2 days
                 .setIssuer("FinanceDemoApp")
                 .setId(UUID.randomUUID().toString())
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
@@ -78,7 +78,7 @@ public class JwtTokenUtil {
                 .claim("uniqueId", uniqueId)
                 .claim("role", role)
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60*2)) // Longer expiration time
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 20))// 20 days
                 .setIssuer("FinanceDemoApp")
                 .setId(UUID.randomUUID().toString())
                 .signWith(SignatureAlgorithm.HS256, refreshSecretKey) // Use a different secret key for refresh tokens

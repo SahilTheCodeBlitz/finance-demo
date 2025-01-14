@@ -1,5 +1,5 @@
 package com.example.FinanceDemoApi.financeDemo.Model;
-import com.example.FinanceDemoApi.financeDemo.Enums.Roles;
+
 import jakarta.persistence.*;
 
 @Entity

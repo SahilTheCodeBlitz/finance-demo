@@ -44,9 +44,9 @@ public class AuthController {
 
 
 
-    @ExceptionHandler(HttpMessageNotReadableException.class) public ResponseEntity<ApiResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) { ApiResponse apiResponse = new ApiResponse("Bad Request: Request body is missing or malformed.");
-        return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
-    }
+//    @ExceptionHandler(HttpMessageNotReadableException.class) public ResponseEntity<ApiResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) { ApiResponse apiResponse = new ApiResponse("Bad Request: Request body is missing or malformed.");
+//        return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
+//    }
 
 
 }

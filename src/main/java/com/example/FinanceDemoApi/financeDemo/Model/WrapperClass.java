@@ -1,6 +1,5 @@
 package com.example.FinanceDemoApi.financeDemo.Model;
 
-import com.example.FinanceDemoApi.financeDemo.Enums.Roles;
 import com.google.gson.Gson;
 
 public class WrapperClass {
