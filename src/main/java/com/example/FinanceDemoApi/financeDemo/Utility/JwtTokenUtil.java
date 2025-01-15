@@ -1,28 +1,20 @@
 package com.example.FinanceDemoApi.financeDemo.Utility;
-
-
-import com.example.FinanceDemoApi.financeDemo.Model.WrapperClass;
 import io.jsonwebtoken.*;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
-
 import java.util.Date;
 import java.util.UUID;
-
 @Component
 public class JwtTokenUtil {
-
-
     @Value("${jwt.secret}")
     private String SECRET_KEY;
-
     @Value("${jwt.secretKeyAccess}")
     private String refreshSecretKey;
 
-
+    // method for generating the access token
     public String generateToken(WrapperClass wrapper) {
+
+        // fetching the data
         String email = wrapper.getEmail();
         String firstName = wrapper.getFirstName();
         String lastName = wrapper.getLastName();
@@ -30,7 +22,7 @@ public class JwtTokenUtil {
         Long uniqueId = wrapper.getUserId();
         String role = wrapper.getRole();
 
-
+        // returning jwt access token
         return Jwts.builder()
                 .setSubject(email)
                 .claim("firstName", firstName)
@@ -46,13 +38,14 @@ public class JwtTokenUtil {
                 .compact();
     }
 
+    // method for extracting claims from the token
     public Claims extractAllClaims(String token) {
         try {
             return Jwts.parser()
-                    .setSigningKey(SECRET_KEY) // Use the same secret key to validate the signature
+                    .setSigningKey(SECRET_KEY) // Secret key to validate the signature
                     .build()
-                    .parseClaimsJws(token) // Parse the JWT token
-                    .getBody(); // Return the claims from the body
+                    .parseClaimsJws(token) // Parsing the JWT token
+                    .getBody(); // Returns the claims from the body
         } catch (JwtException e) {
             throw new IllegalArgumentException("Invalid or expired token", e); // Handle invalid token scenario
         }
@@ -60,9 +53,8 @@ public class JwtTokenUtil {
 
 
     // method for generating refresh token
-
     public String generateRefreshToken(WrapperClass wrapper) {
-
+        // extracting data
         String email = wrapper.getEmail();
         String firstName = wrapper.getFirstName();
         String lastName = wrapper.getLastName();
@@ -70,6 +62,7 @@ public class JwtTokenUtil {
         Long uniqueId = wrapper.getUserId();
         String role = wrapper.getRole();
 
+        // returning jwt refresh token
         return Jwts.builder()
                 .setSubject(email)
                 .claim("firstName",firstName)
@@ -85,9 +78,7 @@ public class JwtTokenUtil {
                 .compact();
     }
 
-
     // method for getting the claims from the refresh token
-
     public Claims extractRefreshClaims(String token) {
         try {
             return Jwts.parser()
@@ -100,16 +91,7 @@ public class JwtTokenUtil {
         }
     }
 
-    public boolean isTokenExpired(String token) {
-        try {
-            Claims claims = extractRefreshClaims(token);
-            return claims.getExpiration().before(new Date());
-        } catch (Exception e) {
-            return true; // If there's an error in extraction, consider it expired
-        }
-    }
-
-
+    // method for parsing and validating the token
     public Claims parseAndValidateToken(String token) throws ExpiredJwtException, MalformedJwtException, SignatureException {
         return Jwts.parser()
                 .setSigningKey(refreshSecretKey)
@@ -117,5 +99,4 @@ public class JwtTokenUtil {
                 .parseClaimsJws(token)
                 .getBody();
     }
-
 }

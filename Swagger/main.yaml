@@ -258,17 +258,39 @@ paths:
                 type: string
                 example: "eyJhbGciOiJIUzaWFWWU...."
         '400':
-          description: Bad Request . Some field in the request body are missing that is sent from client to the server.
+          description: Bad Request - Validation errors or other issues
           content:
             application/json:
-              schema:
-                type: object
-                properties:
-                  message:
-                    type: string
-                    description: Error message indicating the issue with the request.
-                example:
-                  message: "Bad Request: Request body is missing or malformed."
+              examples:
+                single_field_error_phone:
+                  summary: Phone is missing
+                  value:
+                    phone: "Phone is required"
+                single_field_error_firstname:
+                  summary: First name is missing
+                  value:
+                    firstName: "First name is required"
+                single_field_error_lastname:
+                  summary: Last name is missing
+                  value:
+                    lastName: "Last name is required"
+                single_field_error_email:
+                  summary: Email is missing
+                  value:
+                    email: "Email is required"
+                multiple_fields_error:
+                  summary: Multiple fields are missing
+                  value:
+                    lastname: "Last name is required"
+                    phone: "Phone is required"
+                generic_bad_request:
+                  summary: Generic bad request error
+                  value:
+                    type: "about:blank"
+                    title: "Bad Request"
+                    status: 400
+                    detail: "Failed to read request"
+                    instance: "/v1/auth/register"
         '409':
           description: Conflict. User with this email or phone already registered. The body data will specify whether the phone number or email is already present in the database.
           content:

@@ -3,12 +3,10 @@ package com.example.FinanceDemoApi.financeDemo.Config;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import javax.sql.DataSource;
-
 @Configuration
 public class DataSourceConfig {
-
+    // setting the connection pool configuration
     @Bean
     public DataSource dataSource() {
         HikariDataSource dataSource = new HikariDataSource();

@@ -1,5 +1,4 @@
 package com.example.FinanceDemoApi.financeDemo.Config;
-
 import com.example.FinanceDemoApi.financeDemo.Filters.JwtAuthenticationFilter;
 import com.example.FinanceDemoApi.financeDemo.Utility.SetJsonResponse;
 import jakarta.servlet.http.HttpServletResponse;
@@ -12,21 +11,17 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
 import java.util.Arrays;
 import java.util.List;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
-
     @Autowired
     public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
     }
-
     // whitelist of endpoints without authorization
     private static final List<String> WHITELIST = Arrays.asList(
             "/v1/auth/google",
@@ -34,9 +29,7 @@ public class SecurityConfig {
             "/v1/auth/refresh",
             "/v1/test/test3",
             "/v1/test/test4"
-
     );
-
     // WhiteList of the endpoints that are accessible to free users
     private static final List<String> FREE_USER_ENDPOINTS = Arrays.asList(
             "/v1/free/resource1",
@@ -49,7 +42,6 @@ public class SecurityConfig {
             "/v1/premium/resource2",
             "/v1/premium/resource3"
     );
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -57,23 +49,19 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .exceptionHandling(exception -> exception
                         .authenticationEntryPoint((request, response, authException) -> {
-//                            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-//                            response.getWriter().write("Authentication is required or token is invalid");
                             SetJsonResponse setJsonResponse = new SetJsonResponse();
                             setJsonResponse.setJsonErrorResponse(response, HttpServletResponse.SC_UNAUTHORIZED, "Authentication is required or token is invalid");
                         })
                 )
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers(WHITELIST.toArray(new String[0])).permitAll()  // endpoints available without authorization
+                        .requestMatchers(WHITELIST.toArray(new String[0])).permitAll()
                         .requestMatchers(FREE_USER_ENDPOINTS.toArray(new String[0])).hasAuthority("ROLE_free")
                         .requestMatchers(PREMIUM_USER_ENDPOINTS.toArray(new String[0])).hasAuthority("ROLE_premium")
-                        .anyRequest().authenticated()  // All other endpoints require authentication
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-
         return http.build();
     }
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();

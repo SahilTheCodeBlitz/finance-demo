@@ -1,24 +1,19 @@
 package com.example.FinanceDemoApi.financeDemo.Service;
-
+import com.example.FinanceDemoApi.financeDemo.Dto.RefreshTokenDto;
+import com.example.FinanceDemoApi.financeDemo.Dto.TokenRequestDto;
+import com.example.FinanceDemoApi.financeDemo.Dto.UserDto;
 import com.example.FinanceDemoApi.financeDemo.Exception.InvalidTokenException;
 import com.example.FinanceDemoApi.financeDemo.Exception.UserAlreadyExist;
-
 import com.example.FinanceDemoApi.financeDemo.Model.*;
 import com.example.FinanceDemoApi.financeDemo.Repository.ContactRepository;
 import com.example.FinanceDemoApi.financeDemo.Repository.UserRepository;
-import com.example.FinanceDemoApi.financeDemo.Utility.ApiResponse;
-import com.example.FinanceDemoApi.financeDemo.Utility.ContactType;
-import com.example.FinanceDemoApi.financeDemo.Utility.JwtTokenUtil;
-
-import com.example.FinanceDemoApi.financeDemo.Utility.ResponseWrapper;
+import com.example.FinanceDemoApi.financeDemo.Utility.*;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
 import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
-
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
-
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.MalformedJwtException;
@@ -27,181 +22,119 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-
 import org.springframework.http.ResponseEntity;
-
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
+import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.util.Collections;
-
-
 import java.util.Optional;
-
-
 import org.slf4j.Logger;
-
 @Service
 @Transactional
 public class AuthService {
-
     private static final Logger logger = LoggerFactory.getLogger(AuthService.class);
-
     @Value("${app.google.clientId}")
     private  String CLIENT_ID;
-
-
     @Autowired
     private UserRepository userRepository;
-
     @Autowired
     private ContactRepository contactRepository;
-
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
-
-
-    @Transactional
-    public ResponseEntity<?> googleSignIn(String idTokenString){
-        try{
+    public ResponseEntity<?> googleSignIn(TokenRequestDto tokenRequestDto) {
+        try {
+            // Check if the token is null or empty
+            String idTokenString = tokenRequestDto.getIdTokenString();
 
             if (idTokenString == null || idTokenString.trim().isEmpty()) {
                 ApiResponse apiResponse = new ApiResponse("Bad Request: ID token is missing or empty.");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(apiResponse);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
             }
 
+
+            // Verify the token
             idTokenString = idTokenString.trim();
             HttpTransport transport = new NetHttpTransport();
             JsonFactory jsonFactory = GsonFactory.getDefaultInstance();
-
             GoogleIdTokenVerifier verifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
                     .setAudience(Collections.singletonList(CLIENT_ID))
                     .build();
-
             GoogleIdToken idToken = verifier.verify(idTokenString);
 
-            System.out.println(idToken);
-            if (idToken != null) {
-                GoogleIdToken.Payload payload = idToken.getPayload();
 
-                String email = (String) payload.get("email");
-                String phone = (String) payload.get("phoneNumber");
-
-                Optional<ContactSchema> contactSchemaEmail = contactRepository.findByContactInfo(email);
-                Optional<ContactSchema> contactSchemaPhone = contactRepository.findByContactInfo(phone);
-
-                // if user already registered with email
-                if (contactSchemaEmail.isPresent()){
-                    logger.info("User with this email already exist");
-
-                    Optional<UserSchema> userSchema  = Optional.ofNullable(contactSchemaEmail.get().getUserId());
-
-                    WrapperClass wrapperClass = new WrapperClass();
-
-
-                    wrapperClass.setUserId(userSchema.get().getPrimaryKey());
-                    wrapperClass.setEmail(contactSchemaEmail.get().getContactInfo());
-                    wrapperClass.setFirstName(userSchema.get().getFirstName());
-                    wrapperClass.setLastName(userSchema.get().getLastName());
-                    wrapperClass.setPhoneNumber(contactSchemaEmail.get().getContactInfo());
-                    wrapperClass.setRole(userSchema.get().getRole());
-
-                    String jwtAccess = jwtTokenUtil.generateToken(wrapperClass);
-
-                    String jwtRefresh = jwtTokenUtil.generateRefreshToken(wrapperClass);
-
-
-
-                    return ResponseEntity.ok()
-                            .header("Authorization", "Bearer " + jwtAccess)
-                            .header("Refresh-Token", jwtRefresh) // Custom header for refresh token
-                            .body(wrapperClass.toString());
-
-
-
-                }
-                else if (contactSchemaPhone.isPresent()){
-                    // if user has already registered with phone
-                    Optional<UserSchema> userSchema  = Optional.ofNullable(contactSchemaPhone.get().getUserId());
-
-                    WrapperClass wrapperClass = new WrapperClass();
-
-
-                    wrapperClass.setUserId(userSchema.get().getPrimaryKey());
-                    wrapperClass.setEmail(contactSchemaEmail.get().getContactInfo());
-                    wrapperClass.setFirstName(userSchema.get().getFirstName());
-                    wrapperClass.setLastName(userSchema.get().getLastName());
-                    wrapperClass.setPhoneNumber(contactSchemaEmail.get().getContactInfo());
-                    wrapperClass.setRole(userSchema.get().getRole());
-
-                    String jwtAccess = jwtTokenUtil.generateToken(wrapperClass);
-
-                   String jwtRefresh = jwtTokenUtil.generateRefreshToken(wrapperClass);
-
-                    return ResponseEntity.ok()
-                            .header("Authorization", "Bearer " + jwtAccess)
-                            .header("Refresh-Token", jwtRefresh)
-                            .body(wrapperClass.toString());
-                }
-                else {
-                    // user has not registered we will fetch the payload  and send payload
-                    // data to frontend
-
-                    ResponseWrapper responseWrapper = new ResponseWrapper();
-
-                    String firstName = (String) payload.get("given_name");
-                    String lastName = (String) payload.get("family_name");
-
-                    responseWrapper.setEmail(email);
-                    responseWrapper.setPhone(phone);
-                    responseWrapper.setFirstName(firstName);
-                    responseWrapper.setLastName(lastName);
-
-
-                    return new ResponseEntity<>(responseWrapper,HttpStatus.NOT_FOUND);
-                }
-
+            // Check if the token is valid
+            if (idToken == null) {
+                ApiResponse apiResponse = new ApiResponse("Unauthorized: Token is invalid or expired");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
             }
-            else {
-                 throw new InvalidTokenException("Invalid ID token");
+
+            // Extract payload
+            GoogleIdToken.Payload payload = idToken.getPayload();
+            String email = (String) payload.get("email");
+            String phone = (String) payload.get("phoneNumber");
+
+            // Check for existing user
+            Optional<ContactSchema> contactSchemaEmail = contactRepository.findByContactInfo(email);
+            Optional<ContactSchema> contactSchemaPhone = contactRepository.findByContactInfo(phone);
+
+            if (contactSchemaEmail.isPresent()) {
+                // Process existing email user
+                return processExistingUser(contactSchemaEmail.get());
+            } else if (contactSchemaPhone.isPresent()) {
+                // Process existing phone user
+                return processExistingUser(contactSchemaPhone.get());
+            } else {
+                // User not registered
+                ResponseWrapper responseWrapper = new ResponseWrapper();
+                responseWrapper.setEmail(email);
+                responseWrapper.setPhone(phone);
+                responseWrapper.setFirstName((String) payload.get("given_name"));
+                responseWrapper.setLastName((String) payload.get("family_name"));
+
+                return new ResponseEntity<>(responseWrapper, HttpStatus.NOT_FOUND);
             }
+        }
+        catch (GeneralSecurityException | IOException e) {
+            // Handle exceptions thrown during verification
+            ApiResponse apiResponse = new ApiResponse("Unauthorized: Token verification failed.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
         }
         catch (InvalidTokenException e) {
-            // Handle invalid token scenario
-            ApiResponse apiResponse = new ApiResponse("Unauthorized. Token is invalid or expired");
-            return new ResponseEntity<>(apiResponse, HttpStatus.UNAUTHORIZED);
+            ApiResponse apiResponse = new ApiResponse("Unauthorized: Token is invalid or expired");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
         }
         catch (Exception e) {
-
-            ApiResponse apiResponse = new ApiResponse("Internal server error. Token verification failed.");
-            return new ResponseEntity<>(apiResponse, HttpStatus.INTERNAL_SERVER_ERROR);
+            ApiResponse apiResponse = new ApiResponse("Unauthorized: Token verification failed.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(apiResponse);
         }
+    }
+
+    private ResponseEntity<?> processExistingUser(ContactSchema contactSchema) {
+        UserSchema userSchema = contactSchema.getUserSchema();
+
+        WrapperClass wrapperClass = new WrapperClass();
+        wrapperClass.setUserId(userSchema.getPrimaryKey());
+        wrapperClass.setEmail(contactSchema.getContactInfo());
+        wrapperClass.setFirstName(userSchema.getFirstName());
+        wrapperClass.setLastName(userSchema.getLastName());
+        wrapperClass.setPhoneNumber(contactSchema.getContactInfo());
+        wrapperClass.setRole(userSchema.getRole());
+
+        String jwtAccess = jwtTokenUtil.generateToken(wrapperClass);
+        String jwtRefresh = jwtTokenUtil.generateRefreshToken(wrapperClass);
+
+        return ResponseEntity.ok()
+                .header("Authorization", "Bearer " + jwtAccess)
+                .header("Refresh-Token", jwtRefresh)
+                .body(wrapperClass.toString());
     }
 
     @Transactional
     public ResponseEntity<?> registration(UserDto userDto) {
         try {
-            // Validating the request body
-            if (userDto == null
-                    || userDto.getEmail() == null || userDto.getEmail().trim().isEmpty()
-                    || userDto.getFirstName() == null || userDto.getFirstName().trim().isEmpty()
-                    || userDto.getLastName() == null || userDto.getLastName().trim().isEmpty()
-                    || userDto.getPhone() == null || userDto.getPhone().trim().isEmpty()) {
 
-                ApiResponse apiResponse = new ApiResponse("Bad Request: All fields (email, firstName, lastName, phone) are required.");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(apiResponse);
-            }
-
-            // validating the phone number
-            if (userDto.getPhone() == null || !userDto.getPhone().matches("\\d{10}")) {
-                ApiResponse apiResponse = new ApiResponse("Bad Request: The phone number entered is not valid");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                        .body(apiResponse);
-            }
-
-
+            // extracting the email and phone data from the payload
             String email = userDto.getEmail();
             String phone = userDto.getPhone();
 
@@ -218,11 +151,9 @@ public class AuthService {
                 userSchema.setLastName(userDto.getLastName());
                 userSchema.setCreatedDate(System.currentTimeMillis());
                 userSchema = userRepository.save(userSchema);
-
                 // Save email and phone contact
                 saveContact(userSchema, email, ContactType.EMAIL);
                 saveContact(userSchema, phone, ContactType.PHONE);
-
                 // Prepare response
                 wrapperClass.setUserId(userSchema.getPrimaryKey());
                 wrapperClass.setEmail(email);
@@ -232,10 +163,7 @@ public class AuthService {
                 wrapperClass.setRole(userSchema.getRole());
 
                 String jwtAccess = jwtTokenUtil.generateToken(wrapperClass);
-
                 String jwtRefresh = jwtTokenUtil.generateRefreshToken(wrapperClass);
-
-
 
                 return ResponseEntity.status(HttpStatus.CREATED)
                         .header("Authorization", "Bearer " + jwtAccess)
@@ -246,13 +174,15 @@ public class AuthService {
                 // User with the same email already registered
                 ApiResponse apiResponse = new ApiResponse("User with this email already registered");
                 return new ResponseEntity<>(apiResponse, HttpStatus.CONFLICT);
+
             } else if (contactOptionalPhone.isPresent() && contactOptionalEmail.isEmpty()) {
                 // User with the same phone already registered
                 ApiResponse apiResponse = new ApiResponse("User with this phone already registered");
                 return new ResponseEntity<>(apiResponse, HttpStatus.CONFLICT);
+
             } else {
                 // User exists with both email and phone, fetch details
-                Optional<UserSchema> existingUserSchema = Optional.ofNullable(contactOptionalEmail.get().getUserId());
+                Optional<UserSchema> existingUserSchema = Optional.ofNullable(contactOptionalEmail.get().getUserSchema());
                 Optional<ContactSchema> contactSchemaPhone = contactRepository.findByContactInfo(phone);
 
                 wrapperClass.setUserId(existingUserSchema.get().getPrimaryKey());
@@ -263,30 +193,23 @@ public class AuthService {
                 wrapperClass.setRole(existingUserSchema.get().getRole());
 
                 String jwtAccess = jwtTokenUtil.generateToken(wrapperClass);
-
                 String jwtRefresh = jwtTokenUtil.generateRefreshToken(wrapperClass);
-
-
 
                 return ResponseEntity.status(HttpStatus.OK)
                         .header("Authorization", "Bearer " + jwtAccess)
                         .header("Refresh-Token", jwtRefresh)
                         .body(wrapperClass.toString());
-
             }
-
         } catch (UserAlreadyExist e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         } catch (Exception e) {
-
-            return new ResponseEntity<>("Error occurred while processing the request", HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<>("Error occurred while processing the request", HttpStatus.UNAUTHORIZED);
         }
     }
-
     // Helper method to save contact information
     private void saveContact(UserSchema userSchema, String contactInfo, ContactType contactType) {
         ContactSchema contact = new ContactSchema();
-        contact.setUserID(userSchema);
+        contact.setUserSchema(userSchema);
         contact.setContactInfo(contactInfo);
         contact.setContactType(contactType);
         contactRepository.save(contact);
@@ -300,6 +223,7 @@ public class AuthService {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(apiResponse);
         }
 
+        // extracting the token that is send by the client
         String token = refreshTokenDto.getToken();
 
         try {
@@ -348,8 +272,4 @@ public class AuthService {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).body(apiResponse);
         }
     }
-
-
-
-
 }
