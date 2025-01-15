@@ -18,9 +18,12 @@ import java.util.List;
 @EnableWebSecurity
 public class SecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    private final CustomCorsConfiguration customCorsConfiguration;
     @Autowired
-    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter) {
+    public SecurityConfig(JwtAuthenticationFilter jwtAuthenticationFilter, CustomCorsConfiguration customCorsConfiguration) {
         this.jwtAuthenticationFilter = jwtAuthenticationFilter;
+        this.customCorsConfiguration = customCorsConfiguration;
     }
     // whitelist of endpoints without authorization
     private static final List<String> WHITELIST = Arrays.asList(
@@ -59,7 +62,9 @@ public class SecurityConfig {
                         .requestMatchers(PREMIUM_USER_ENDPOINTS.toArray(new String[0])).hasAuthority("ROLE_premium")
                         .anyRequest().authenticated()
                 )
+                .cors(c -> c.configurationSource(customCorsConfiguration))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
+
         return http.build();
     }
     @Bean
