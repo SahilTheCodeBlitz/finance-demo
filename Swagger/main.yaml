@@ -527,6 +527,168 @@ paths:
                     description: Generic error message for unexpected server errors.
                     example: "An unexpected error occurred."
 
+  /generate-token:
+    post:
+      summary: Generate an OTP for a user based on email or phone
+      operationId: generateToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  description: Email of the user (optional)
+                  example: user@example.com
+                phone:
+                  type: string
+                  description: Phone number of the user (optional)
+                  example: "1234567890"
+              required: [ ]
+            examples:
+              example1:
+                summary: Only email provided
+                value:
+                  email: "sahil@kanris.biz"
+              example2:
+                summary: Only phone provided
+                value:
+                  phone: "724908719"
+              example3:
+                summary: Both email and phone provided
+                value:
+                  email: "sahil@kanris.biz"
+                  phone: "724908719"
+      responses:
+        "200":
+          description: OTP generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: success
+                  message:
+                    type: string
+                    example: OTP generated successfully
+                  otp:
+                    type: string
+                    example: "123456"
+                  id:
+                    type: integer
+                    example: 1
+                  timestamp:
+                    type: string
+                    format: date-time
+                    example: "2025-01-15T10:00:00"
+        "400":
+          description: Bad Request - Either email or phone must be provided
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: failed
+                  message:
+                    type: string
+                    example: Either email or phone must be provided
+        "401":
+          description: Unauthorized.Either token is invalid or expired
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Invalid JWT token
+        "404":
+          description: Not Found - No user found with the provided email or phone
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: failed
+                  message:
+                    type: string
+                    example: No user found with the provided email or phone
+        "500":
+          description: Internal Server Error - Something went wrong with generating OTP
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: failed
+                  message:
+                    type: string
+                    example: Something went wrong with generating OTP
+  /verify-token:
+    post:
+      summary: Verify OTP for a user
+      operationId: verifyToken
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                otp:
+                  type: string
+                  description: OTP provided by the user
+                  example: "123456"
+                id:
+                  type: integer
+                  description: ID associated with the OTP
+                  example: 1
+              required:
+                - otp
+                - id
+            examples:
+              example1:
+                summary: Verify OTP with ID
+                value:
+                  otp: "123456"
+                  id: 1
+      responses:
+        "200":
+          description: OTP verified successfully
+
+        "400":
+          description: Bad Request - Invalid OTP or ID provided
+
+        "404":
+          description: Not Found - OTP entry not found
+
+        "410":
+          description: Gone - OTP has expired
+
+        "401":
+          description: Unauthorized - OTP does not match or JWT token not verified . If message is not shown means wrong otpotp d
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Invalid JWT token"
+
+
+
+
 components:
   schemas:
     ContactSchema:
