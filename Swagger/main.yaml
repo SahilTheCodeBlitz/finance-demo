@@ -527,8 +527,10 @@ paths:
                     description: Generic error message for unexpected server errors.
                     example: "An unexpected error occurred."
 
-  /generate-token:
+  /generate:
     post:
+      tags:
+        - Token Generation
       summary: Generate an OTP for a user based on email or phone
       operationId: generateToken
       requestBody:
@@ -587,17 +589,7 @@ paths:
                     example: "2025-01-15T10:00:00"
         "400":
           description: Bad Request - Either email or phone must be provided
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: failed
-                  message:
-                    type: string
-                    example: Either email or phone must be provided
+
         "401":
           description: Unauthorized.Either token is invalid or expired
           content:
@@ -610,32 +602,14 @@ paths:
                     example: Invalid JWT token
         "404":
           description: Not Found - No user found with the provided email or phone
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: failed
-                  message:
-                    type: string
-                    example: No user found with the provided email or phone
+
         "500":
           description: Internal Server Error - Something went wrong with generating OTP
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    example: failed
-                  message:
-                    type: string
-                    example: Something went wrong with generating OTP
-  /verify-token:
+
+  /verify:
     post:
+      tags:
+        - Token Generation
       summary: Verify OTP for a user
       operationId: verifyToken
       requestBody:
