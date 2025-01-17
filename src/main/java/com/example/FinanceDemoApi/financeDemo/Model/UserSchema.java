@@ -1,7 +1,6 @@
 package com.example.FinanceDemoApi.financeDemo.Model;
 import jakarta.persistence.*;
 import lombok.Data;
-
 @Entity
 @Table(name = "userss")
 @Data

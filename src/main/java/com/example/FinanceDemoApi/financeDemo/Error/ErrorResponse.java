@@ -1,13 +1,10 @@
 package com.example.FinanceDemoApi.financeDemo.Error;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class ErrorResponse {
     private String message;
-    public ErrorResponse( String message) {
-        this.message = message;
-    }
-    public String getMessage() {
-        return message;
-    }
-    public void setMessage(String message) {
-        this.message = message;
-    }
 }

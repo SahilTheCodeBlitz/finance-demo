@@ -10,15 +10,15 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/v1/auth")
 public class AuthController {
+    private final AuthService authService;
+
     @Autowired
-    private AuthService authService;
-    public AuthService getAuthService() {
-        return authService;
+    public AuthController(AuthService authService){
+        this.authService = authService;
     }
 
     @PostMapping("/google")
     public ResponseEntity<?> googleAuth(@RequestBody TokenRequestDto tokenRequest) {
-
         return authService.googleSignIn(tokenRequest);
     }
 

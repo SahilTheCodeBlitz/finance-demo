@@ -23,5 +23,4 @@ public class ContactSchema {
     @Column(nullable = false)
     private ContactType contactType;
 
-
 }

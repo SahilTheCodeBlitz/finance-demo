@@ -1,7 +1,6 @@
 package com.example.FinanceDemoApi.financeDemo.Utility;
 import com.google.gson.Gson;
 import lombok.Data;
-
 @Data
 public class WrapperClass {
     private String firstName;
@@ -10,7 +9,6 @@ public class WrapperClass {
     private String  email;
     private Long userId;
     private String role;
-
 
     @Override
     public String toString() {

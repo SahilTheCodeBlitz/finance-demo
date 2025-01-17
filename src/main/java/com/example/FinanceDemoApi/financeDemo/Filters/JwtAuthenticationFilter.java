@@ -21,9 +21,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private String SECRET_KEY;
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        String authHeader = request.getHeader("Authorization");
-            if (authHeader != null && authHeader.startsWith("Bearer ")) {
-                String token = authHeader.substring(7);
+
+        if (request.getHeader("Authorization") != null &&  request.getHeader("Authorization").startsWith("Bearer ")) {
+            String token = request.getHeader("Authorization").substring(7);
                 try {
                     Claims claims = Jwts.parser()
                             .setSigningKey(SECRET_KEY)

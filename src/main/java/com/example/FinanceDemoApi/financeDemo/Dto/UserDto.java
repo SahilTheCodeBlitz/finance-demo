@@ -5,7 +5,6 @@ import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -24,6 +23,5 @@ public class UserDto {
     @NotBlank(message = "Phone is required")
     @Pattern(regexp = "^\\d{10}$", message = "Phone number should be 10 digits")
     private  String phone;
-
 
 }

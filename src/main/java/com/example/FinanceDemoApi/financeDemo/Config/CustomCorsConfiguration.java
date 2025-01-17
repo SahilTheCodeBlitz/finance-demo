@@ -7,7 +7,6 @@ import java.util.List;
 
 @Component
 public class CustomCorsConfiguration implements CorsConfigurationSource {
-
     @Override
     public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
         CorsConfiguration config = new CorsConfiguration();

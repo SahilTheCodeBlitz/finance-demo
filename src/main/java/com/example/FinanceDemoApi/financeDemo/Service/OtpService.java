@@ -8,13 +8,9 @@ import com.example.FinanceDemoApi.financeDemo.Repository.OtpEntityRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Base64;
 import java.util.Map;
 import java.util.Optional;
 
@@ -27,7 +23,6 @@ public class OtpService {
         this.contactRepository = contactRepository;
         this.otpEntityRepository = otpEntityRepository;
     }
-
     public ResponseEntity<Object> generateToken(OtpDto otpDto) {
 
         // Validate that either email or phone is provided
@@ -55,14 +50,6 @@ public class OtpService {
         // Generate a 6-digit OTP
         String plainOtp = String.format("%06d", new SecureRandom().nextInt(999999));
 
-        // Hash the OTP using SHA-256
-        String hashedOtp;
-        try {
-            hashedOtp = hashOtp(plainOtp);
-        } catch (NoSuchAlgorithmException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-
-        }
 
         // Find existing OTP entry for the user, if exists
         Optional<OtpEntity> existingOtpEntity = otpEntityRepository.findByUserId(contactSchema.get().getUserSchema());
@@ -72,17 +59,17 @@ public class OtpService {
         if (existingOtpEntity.isPresent()) {
             // If OTP already exists for this user, update it with the new hashed OTP and timestamp
             otpEntity = existingOtpEntity.get();
-            otpEntity.setOtp(hashedOtp);
+            otpEntity.setOtp(plainOtp);
             otpEntity.setTimestamp(LocalDateTime.now()); // Set current timestamp
         } else {
             // If no OTP entry exists for this user, create a new OTP entity
             otpEntity = new OtpEntity();
-            otpEntity.setOtp(hashedOtp);
+            otpEntity.setOtp(plainOtp);
             otpEntity.setUserId(contactSchema.get().getUserSchema());
             otpEntity.setTimestamp(LocalDateTime.now()); // Set current timestamp
         }
 
-        // Save hashed OTP in the database
+        // Save  OTP in the database
         otpEntityRepository.save(otpEntity);
 
         // Return success response with plain OTP
@@ -109,16 +96,17 @@ public class OtpService {
         // Retrieve the OTP entity
         OtpEntity otpEntity = otpEntityOptional.get();
 
-        // Check if the OTP has expired (e.g., after 30 seconds)
+        // Check if the OTP has expired (e.g., after 300 seconds)
         if (Duration.between(otpEntity.getTimestamp(), LocalDateTime.now()).getSeconds() > 300) {
             // If OTP has expired
             return ResponseEntity.status(HttpStatus.GONE).build();
 
         }
+
         // Hash the user-provided OTP for comparison
         try {
             // Validate the OTP by comparing hashes
-            if (otpEntity.getOtp().equals(hashOtp(otpVerificationDto.getOtp()))) {
+            if (otpEntity.getOtp().equals(otpVerificationDto.getOtp())) {
                 // If the OTP matches
                 return ResponseEntity.status(HttpStatus.OK).build();
             } else {
@@ -126,15 +114,10 @@ public class OtpService {
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
 
             }
-        } catch (NoSuchAlgorithmException e) {
+        } catch (Exception e) {
             // Handle hashing failure
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 
         }
     }
-
-    private String hashOtp(String otp) throws NoSuchAlgorithmException {
-        return Base64.getEncoder().encodeToString(MessageDigest.getInstance("SHA-256").digest(otp.getBytes(StandardCharsets.UTF_8)));
-    }
-
 }

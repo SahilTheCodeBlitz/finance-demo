@@ -13,23 +13,14 @@ public class JwtTokenUtil {
 
     // method for generating the access token
     public String generateToken(WrapperClass wrapper) {
-
-        // fetching the data
-        String email = wrapper.getEmail();
-        String firstName = wrapper.getFirstName();
-        String lastName = wrapper.getLastName();
-        String phoneNumber = wrapper.getPhoneNumber();
-        Long uniqueId = wrapper.getUserId();
-        String role = wrapper.getRole();
-
         // returning jwt access token
         return Jwts.builder()
-                .setSubject(email)
-                .claim("firstName", firstName)
-                .claim("lastName", lastName)
-                .claim("phoneNumber", phoneNumber)
-                .claim("uniqueId",uniqueId)
-                .claim("role",role)
+                .setSubject(wrapper.getEmail())
+                .claim("firstName", wrapper.getFirstName())
+                .claim("lastName", wrapper.getLastName())
+                .claim("phoneNumber", wrapper.getPhoneNumber())
+                .claim("uniqueId",wrapper.getUserId())
+                .claim("role",wrapper.getRole())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 2))// 2 days
                 .setIssuer("FinanceDemoApp")
@@ -54,22 +45,14 @@ public class JwtTokenUtil {
 
     // method for generating refresh token
     public String generateRefreshToken(WrapperClass wrapper) {
-        // extracting data
-        String email = wrapper.getEmail();
-        String firstName = wrapper.getFirstName();
-        String lastName = wrapper.getLastName();
-        String phoneNumber = wrapper.getPhoneNumber();
-        Long uniqueId = wrapper.getUserId();
-        String role = wrapper.getRole();
-
         // returning jwt refresh token
         return Jwts.builder()
-                .setSubject(email)
-                .claim("firstName",firstName)
-                .claim("lastName",lastName)
-                .claim("phoneNumber",phoneNumber)
-                .claim("uniqueId", uniqueId)
-                .claim("role", role)
+                .setSubject(wrapper.getEmail())
+                .claim("firstName",wrapper.getFirstName())
+                .claim("lastName",wrapper.getLastName())
+                .claim("phoneNumber",wrapper.getPhoneNumber())
+                .claim("uniqueId", wrapper.getUserId())
+                .claim("role", wrapper.getRole())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 20))// 20 days
                 .setIssuer("FinanceDemoApp")
